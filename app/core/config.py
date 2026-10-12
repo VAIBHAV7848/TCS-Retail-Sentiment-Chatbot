@@ -50,6 +50,10 @@ class Settings(BaseSettings):
     max_retries: int = 2
     request_timeout_seconds: int = 30
 
+    # RAG (optional, fail-open lightweight retrieval)
+    rag_enabled: bool = True
+    rag_top_k: int = 3
+
     model_config = {"env_file": ".env", "env_file_encoding": "utf-8", "extra": "ignore"}
 
 
