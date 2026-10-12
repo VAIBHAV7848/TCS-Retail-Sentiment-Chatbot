@@ -1,10 +1,24 @@
-# Retail Customer Sentiment Analysis Chatbot
+# Retail Customer Sentiment Analysis Chatbot (SentimentIQ)
 
 **Winner — TCS Technology Day Hackathon, M.S. Sheshgiri College of Engineering & Technology, Belagavi (October 2026)**
 
 A multi-agent retail care chatbot designed for real-time customer engagement, fail-closed privacy protection, two-tier sentiment analysis, and sentiment-adaptive avatar feedback. 
 
 The system runs **100% locally out-of-the-box** using Ollama (`llama3.2:3b`), local transformer classifiers, and SQLite. No cloud API keys or external subscriptions are required to run the pipeline end-to-end.
+
+---
+
+## 🎬 Product Demo & Launch Video
+
+<p align="center">
+  <a href="https://github.com/VAIBHAV7848/TCS-Retail-Sentiment-Chatbot/raw/main/docs/assets/brag.mp4">
+    <img src="docs/assets/demo.gif" alt="SentimentIQ Product Launch Demo" width="100%" style="border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.4);" />
+  </a>
+</p>
+
+<p align="center">
+  <em>▶ <strong>Watch the full 1080p launch video with audio (35s):</strong> <a href="https://github.com/VAIBHAV7848/TCS-Retail-Sentiment-Chatbot/raw/main/docs/assets/brag.mp4"><code>docs/assets/brag.mp4</code></a></em>
+</p>
 
 ---
 
