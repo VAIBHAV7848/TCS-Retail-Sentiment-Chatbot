@@ -91,3 +91,68 @@ async def test_cases_listing():
         assert response.status_code == 200
         cases = response.json()
         assert isinstance(cases, list)
+
+
+@pytest.mark.asyncio
+async def test_human_handoff_and_messaging_e2e():
+    """Verify customer opt-out to human specialist, seamless message relay, and queue sync."""
+    session_id = f"test_human_sess_{uuid.uuid4().hex[:8]}"
+
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as ac:
+        # 1. Customer initiates handoff
+        handoff_res = await ac.post(
+            "/chat/human/handoff",
+            json={
+                "session_id": session_id,
+                "reason": "Customer opted out of AI to speak with a human",
+            },
+        )
+        assert handoff_res.status_code == 200
+        handoff_data = handoff_res.json()
+        assert handoff_data["status"] == "connected"
+        assert handoff_data["agent_name"] == "Sarah Jenkins"
+        assert "Sarah Jenkins" in handoff_data["handoff_message"]
+
+        # 2. Customer sends a message with sensitive phone number
+        cust_res = await ac.post(
+            "/chat/human/send",
+            json={
+                "session_id": session_id,
+                "sender": "customer",
+                "message": "Hi Sarah, my order #ORD-7711 is damaged. Please call me at 9845012345.",
+            },
+        )
+        assert cust_res.status_code == 200
+        cust_data = cust_res.json()
+        assert cust_data["sender"] == "customer"
+        assert "9845012345" not in cust_data["text"]  # Must be masked by privacy vault
+        assert cust_data["sentiment"] is not None
+
+        # 3. Human Representative Sarah Jenkins sends a response
+        agent_res = await ac.post(
+            "/chat/human/send",
+            json={
+                "session_id": session_id,
+                "sender": "human_agent",
+                "message": "Hello! I am reviewing your order right now and processing an immediate replacement.",
+                "agent_name": "Sarah Jenkins",
+            },
+        )
+        assert agent_res.status_code == 200
+        agent_data = agent_res.json()
+        assert agent_data["is_human"] is True
+        assert agent_data["agent_name"] == "Sarah Jenkins"
+
+        # 4. Fetch full session messages to verify seamless combined transcript
+        transcript_res = await ac.get(f"/chat/sessions/{session_id}/messages")
+        assert transcript_res.status_code == 200
+        msgs = transcript_res.json()
+        assert len(msgs) >= 3  # Handoff notice + Customer msg + Agent reply
+        assert any(m["is_human"] for m in msgs)
+
+        # 5. Verify session appears in active representative desk queue
+        queue_res = await ac.get("/chat/human/active-sessions")
+        assert queue_res.status_code == 200
+        queue_sessions = queue_res.json()
+        assert any(s["session_id"] == session_id for s in queue_sessions)
+
