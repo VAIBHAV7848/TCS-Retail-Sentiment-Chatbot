@@ -1,0 +1,78 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+    --font-mono: "SF Mono", Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+    background-color: #08090c;
+    color: #e2e8f0;
+    font-family: var(--font-sans);
+    letter-spacing: -0.011em;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow: hidden;
+  }
+}
+
+/* Custom minimal scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.22);
+}
+
+/* Hairline borders inspired by Apple & Google Antigravity */
+.border-subtle {
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.border-subtle-hover:hover {
+  border-color: rgba(255, 255, 255, 0.16);
+}
+
+.surface-canvas {
+  background-color: #08090c;
+}
+
+.surface-panel {
+  background-color: #0f1218;
+}
+
+.surface-card {
+  background-color: #141822;
+}
+
+.surface-elevated {
+  background-color: #1a1f2c;
+}
+
+/* Smooth motion utilities */
+.transition-smooth {
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Subtle glow for critical alerts only */
+.alert-glow-rose {
+  box-shadow: 0 0 24px -4px rgba(244, 63, 94, 0.15);
+}
+
+.alert-glow-amber {
+  box-shadow: 0 0 24px -4px rgba(245, 158, 11, 0.15);
+}
