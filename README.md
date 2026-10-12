@@ -1,235 +1,310 @@
 <div align="center">
 
-# ⚡ SentimentIQ — Retail Customer Sentiment Intelligence
+# ⚡ RetailSense AI
 
-**🏆 Winner — TCS Technology Day Hackathon**  
-*Hosted at M.S. Sheshgiri College of Engineering & Technology, Belagavi (October 2026)*
+### Privacy-first customer-sentiment intelligence for retail support
 
-[![Python 3.11+](https://img.shields.io/badge/Python-3.11%2B-blue?logo=python&logoColor=white)](https://www.python.org/)
-[![FastAPI](https://img.shields.io/badge/Backend-FastAPI-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
-[![React 19](https://img.shields.io/badge/Frontend-React%2019-61DAFB?logo=react&logoColor=black)](https://react.dev/)
-[![Three.js](https://img.shields.io/badge/3D%20Avatar-Three.js%20VRM-black?logo=three.js&logoColor=white)](https://threejs.org/)
-[![Local Ollama](https://img.shields.io/badge/LLM-Local%20Ollama%20(llama3.2)-FF6B6B?logo=ollama&logoColor=white)](https://ollama.com/)
-[![Presidio PII](https://img.shields.io/badge/Privacy-Presidio%20AES--256-green?logo=shield&logoColor=white)](https://microsoft.github.io/presidio/)
+**🏆 Winner — TCS Technology Day Hackathon**
+*M.S. Sheshgiri College of Engineering & Technology, Belagavi · October 2026*
+
+[![Python](https://img.shields.io/badge/Python-3.11+-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+[![React](https://img.shields.io/badge/React_19-61DAFB?logo=react&logoColor=black)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Hugging Face](https://img.shields.io/badge/Transformers-FFD21E?logo=huggingface&logoColor=black)](https://huggingface.co/)
+[![Ollama](https://img.shields.io/badge/Local_LLM-Ollama-000000?logo=ollama&logoColor=white)](https://ollama.com/)
+[![Presidio](https://img.shields.io/badge/PII-Microsoft_Presidio-0078D4?logo=microsoft&logoColor=white)](https://microsoft.github.io/presidio/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-<p align="center">
-  A production-grade, 4-agent customer intelligence system designed for real-time frontline retail: detecting emotional frustration, intercepting and vaulting sensitive PII (Aadhaar, cards, mobile), grounding answers in policy knowledge, and providing a sentiment-adaptive 3D humanoid avatar with zero-lag supervisor escalation.
-</p>
+**Reads how a customer feels. Hides who they are. Knows when a human should step in.**
 
-<p align="center">
-  <strong>100% Local Inference Out-of-the-Box • Zero External Cloud APIs Required • Sub-120ms Local Pipeline</strong>
-</p>
+<br/>
 
----
+<!--
+  UPGRADE TIP (inline video player on GitHub):
+  1. On github.com, click the pencil icon to edit this README.
+  2. Drag docs/assets/brag.mp4 into the editor. GitHub uploads it and inserts a
+     https://github.com/user-attachments/assets/... link on its own line.
+  3. Paste that link here, replacing the clickable-GIF block below. It then plays inline.
+-->
 
-### 🎬 Product Launch Video & Interactive Demo
-
-<a href="https://github.com/VAIBHAV7848/TCS-Retail-Sentiment-Chatbot/raw/main/docs/assets/brag.mp4">
-  <img src="docs/assets/demo.gif" alt="SentimentIQ Product Launch Demo" width="100%" style="border-radius: 14px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1);" />
+<a href="docs/assets/brag.mp4">
+  <img src="docs/assets/demo.gif" alt="RetailSense AI demo — click to watch the full 42-second launch film" width="92%" />
 </a>
 
-<p align="center">
-  <em>▶ <strong>Watch the full 1080p cinematic launch video with audio (42s):</strong> <a href="https://github.com/VAIBHAV7848/TCS-Retail-Sentiment-Chatbot/raw/main/docs/assets/brag.mp4"><code>docs/assets/brag.mp4</code></a></em>
-</p>
+<sub>▶ <b><a href="docs/assets/brag.mp4">Watch the full 42-second launch film (1080p, with audio)</a></b></sub>
 
 </div>
 
 ---
 
-## 📸 Core Capabilities & Interface Showcase
+## Table of contents
 
-| 1. Real-Time Frustration Detection & 3D Avatar | 2. Military-Grade PII Interception & Vault |
-|:---:|:---:|
-| [![Chat & Avatar](docs/assets/screen-chat-escalation.png)](docs/assets/screen-chat-escalation.png) | [![Privacy Vault](docs/assets/screen-privacy-vault.png)](docs/assets/screen-privacy-vault.png) |
-| **Instant Sentiment Scoring:** Cardiff RoBERTa scores negative customer polarity in ~50ms. The adaptive 3D VRM humanoid avatar dynamically reacts with empathetic facial expressions. | **Fail-Closed Tokenization:** Checks Aadhaar, phone, card numbers with mathematical checksums & Presidio. Values are encrypted into an isolated vault before reaching the LLM. |
-| **3. Autonomous Supervisor Escalation Desk** | **4. Executive Telemetry & Recharts BI** |
-| [![Human Agent Desk](docs/assets/screen-human-desk.png)](docs/assets/screen-human-desk.png) | [![Analytics Dashboard](docs/assets/screen-dashboard.png)](docs/assets/screen-dashboard.png) |
-| **Zero-Lag Specialist Takeover:** Automatically transfers critical or repeated complaints to the Human Agent Desk with complete sentiment telemetry and escalation summaries. | **Operational Intelligence:** Live Recharts visualization of sentiment distributions, first-contact resolution rates (82%), and end-to-end pipeline latency. |
+[The problem](#-the-problem) · [What it does](#-what-it-does) · [Screens](#-screens) · [Architecture](#-architecture) · [Under the hood](#-under-the-hood) · [Results](#-results-from-the-demo-session) · [Quick start](#-quick-start) · [Try it](#-try-these-7-scenarios) · [API](#-api) · [Tests](#-tests) · [Honest limitations](#-honest-limitations--roadmap) · [Structure](#-repository-structure)
 
 ---
 
-## 🏛️ System Architecture & Multi-Agent Flow
+## 🎯 The problem
+
+A retail support desk handles thousands of messages. Three things go wrong at scale:
+
+1. **Angry customers are found too late.** A chargeback threat sits in the queue next to a "where is my parcel?".
+2. **Customers paste sensitive data into chat** — Aadhaar, phone numbers, cards — and it flows straight into whatever model sits behind the bot.
+3. **Bots keep talking when a human is needed**, which turns a bad moment into a lost customer.
+
+RetailSense AI is a working prototype that tackles all three in one pipeline.
+
+## ✨ What it does
+
+| | Capability | How |
+|---|---|---|
+| 🛡️ | **Masks PII before any model sees it** | Presidio NER + custom Indian recognizers (Aadhaar, PAN, UPI, IFSC, phone, card). Originals go to an encrypted vault; models only see tags like `[AADHAAR_1]`. |
+| 🧠 | **Two-tier sentiment & emotion** | Fast local RoBERTa polarity + DistilRoBERTa emotion, plus rule-based urgency signals. An LLM second opinion handles ambiguous, negative or sarcastic turns. |
+| 🚨 | **Four-level escalation ladder** | `NONE → FOLLOW_UP → HUMAN_REVIEW → URGENT_HANDOFF`, with a masked handoff package (summary, signals, excerpts, policy refs) for the agent. |
+| 📚 | **Policy-grounded answers** | SQLite FTS5 retrieval over your policy markdown; sources are cited in the reply. Retrieval fails open — if it breaks, the bot still answers. |
+| 🎭 | **Sentiment-adaptive avatar** | Backend emits expression, intensity, voice tone, speech rate and gesture. The rule: *never look cheerful at an angry or escalated customer.* |
+| 🧑‍💼 | **Human agent desk** | Live queue of escalated sessions with sentiment telemetry, and two-way messaging after handoff. |
+| 📊 | **Analytics dashboard** | Sentiment mix, average confidence, Tier-2 rate, latency and the escalation queue — all computed from stored turns. |
+| 🔌 | **Runs fully local** | Ollama by default — no cloud key required. Groq is an optional fallback; templates are the last resort. |
+
+## 📸 Screens
+
+<table>
+<tr>
+<td width="50%"><a href="docs/assets/screen-chat-escalation.png"><img src="docs/assets/screen-chat-escalation.png" alt="Customer console with avatar and privacy vault"/></a><br/><sub><b>Customer console</b> — chat, adaptive avatar, and the live "raw vs tokenized" privacy panel.</sub></td>
+<td width="50%"><a href="docs/assets/screen-privacy-vault.png"><img src="docs/assets/screen-privacy-vault.png" alt="Privacy vault"/></a><br/><sub><b>Privacy vault</b> — what the customer typed vs what the model is allowed to see.</sub></td>
+</tr>
+<tr>
+<td width="50%"><a href="docs/assets/screen-human-desk.png"><img src="docs/assets/screen-human-desk.png" alt="Human agent desk"/></a><br/><sub><b>Human agent desk</b> — escalated sessions with context, ready for takeover.</sub></td>
+<td width="50%"><a href="docs/assets/screen-dashboard.png"><img src="docs/assets/screen-dashboard.png" alt="Analytics dashboard"/></a><br/><sub><b>Analytics</b> — sentiment distribution, Tier-2 rate, latency and the handoff queue.</sub></td>
+</tr>
+</table>
+
+## 🏛️ Architecture
 
 ```mermaid
 flowchart TD
-    classDef client fill:#0f172a,stroke:#38bdf8,stroke-width:2px,color:#f8fafc;
-    classDef agent fill:#1e1b4b,stroke:#818cf8,stroke-width:2px,color:#f8fafc;
-    classDef secure fill:#064e3b,stroke:#34d399,stroke-width:2px,color:#f8fafc;
-    classDef model fill:#450a0a,stroke:#f87171,stroke-width:2px,color:#f8fafc;
-    classDef out fill:#172554,stroke:#60a5fa,stroke-width:2px,color:#f8fafc;
-
-    User["Inbound Customer Message\n(Web / API)"]:::client --> A1["Agent 1: Preprocessing\n• Unicode normalization\n• Emoji & negation preservation"]:::agent
-
-    A1 --> A2["Agent 2: PII Masking (Fail-Closed)\n• Presidio NER + Indian Recognizers (Aadhaar, PAN, UPI)\n• Luhn / Verhoeff Checksum Validation"]:::secure
-
-    A2 -->|Hashed Tokens| Vault[("Encrypted SQLite Vault\nAES-256 / Fernet with TTL")]:::secure
-    A2 -->|Sanitized Prompt| A3["Agent 3: Sentiment & Urgency\n• Tier 1: Cardiff RoBERTa + DistilRoBERTa (~50ms)\n• Tier 2: LLM Disagreement / Sarcasm Review"]:::model
-
-    A3 --> A4["Agent 4: Response & Policy RAG\n• SQLite FTS5 RAG Knowledge Retrieval\n• Never autonomously authorizes cash refunds\n• Generates Human Escalation Packet"]:::agent
-
-    A4 --> OutScan["Output Verification Scan\n• Verifies no vault keys or PII in reply"]:::secure
-
-    OutScan --> Frontend["Client Presentation\n• 3D VRM Empathy Avatar\n• Human Supervisor Console\n• Executive BI Telemetry"]:::out
+    U["Customer message"] --> A1["① Preprocess<br/>Unicode fix · HTML strip · elongation · length cap"]
+    A1 --> A2["② Privacy agent<br/>Presidio + Indian recognizers"]
+    A2 -->|"placeholder → value map"| V[("Fernet-encrypted<br/>in-memory vault")]
+    A2 -->|"masked text only"| BAR{{"Privacy barrier<br/>raw_text dropped from state"}}
+    A2 -. "masking error" .-> FC["Fail closed<br/>safe canned reply, no model called"]
+    BAR --> A3["③ Sentiment agent<br/>RoBERTa polarity · DistilRoBERTa emotion · rules"]
+    A3 -->|"needs a second opinion"| T2["Tier-2 LLM review"]
+    T2 --> A3
+    A3 --> R["Router<br/>escalation · fast_positive · standard"]
+    R --> RAG["Policy retrieval<br/>SQLite FTS5 (fail-open)"]
+    RAG --> A4["④ Response agent<br/>tone-adapted reply · escalation decision · avatar directive"]
+    A4 --> OS["Output scan<br/>redact any PII-shaped text"]
+    OS --> UI["React UI<br/>Chat · Avatar · Human desk · Analytics"]
 ```
 
----
+Four agents run **sequentially** in one async pipeline (`app/orchestration/graph.py`). The order is the point: **privacy always runs before sentiment, retrieval and generation.**
 
-## 🧠 Local AI Stack & Footprint
+## 🔬 Under the hood
 
-SentimentIQ runs entirely on consumer hardware (tested on CPU and laptop RTX 4050 GPU) without any cloud dependency:
+### 🛡️ Privacy — masking before models, not prompts
 
-| Role | Model / Library | Engine | VRAM / RAM Footprint | Inference Latency |
-|:-----|:----------------|:-------|:---------------------|:------------------|
-| **Local LLM (Generation & Tier-2)** | `llama3.2:3b` | Ollama | ~2.0 GB | ~280ms (GPU) / ~900ms (CPU) |
-| **Sentiment Polarity** | `cardiffnlp/twitter-roberta-base-sentiment-latest` | Hugging Face / PyTorch | ~499 MB | ~48ms |
-| **Emotion Classification** | `j-hartmann/emotion-english-distilroberta-base` | Hugging Face / PyTorch | ~329 MB | ~45ms |
-| **Entity Recognition** | `en_core_web_sm` | spaCy / Presidio | ~12 MB | ~15ms |
-| **Zero-Dep Knowledge Base** | SQLite FTS5 + BM25-overlap | In-Process SQLite | < 5 MB | < 2ms |
+Asking an LLM to "please redact PII" is non-deterministic and can be bypassed by prompt injection. So masking happens in code, first.
 
----
+| Entity | Detection | Validation / confidence |
+|---|---|---|
+| Aadhaar | 12-digit regex (`[2-9]…`) | **Verhoeff checksum** → 0.98 if valid, 0.90 if not. A failed checksum never lets a number through; over-masking beats leaking. |
+| Card | 13–19 digits | **Luhn checksum** required |
+| Phone | Indian mobile formats, `+91` | pattern |
+| PAN · UPI · IFSC · Order ID | custom recognizers | pattern |
+| Name · email · location … | Presidio + spaCy `en_core_web_sm` | NER score ≥ 0.5 |
 
-## 🚀 Quick Start Guide
+- **Vault:** placeholder→value maps are encrypted with **Fernet (AES-128-CBC + HMAC-SHA256)** and held in memory, keyed by a vault reference.
+- **Fail-closed:** if masking raises, the text becomes `[CONTENT_REDACTED_PRIVACY_ERROR]`, the pipeline returns a safe reply, and no sentiment or LLM call happens.
+- **Barrier:** `raw_text` is cleared from workflow state right after masking, enforced by an explicit runtime check.
+- **Output scan:** replies are scanned for card/Aadhaar/PAN/email/phone-shaped strings and redacted before they leave.
 
-### Prerequisites
-- Python 3.11+
-- Node.js 18+ and npm
-- [Ollama](https://ollama.com/) (for 100% local model execution)
+### 🧠 Sentiment — fast first, smart when needed
 
-### 1. Setup Local Models & Backend
+**Tier 1 (always, local):** `cardiffnlp/twitter-roberta-base-sentiment-latest` for polarity, `j-hartmann/emotion-english-distilroberta-base` for emotion, and a rules engine for escalation signals (see below).
+
+**Tier 2 (LLM review)** runs when any of these hold:
+
+- Tier-1 confidence is below `0.70`
+- polarity is **negative** *(so most complaints get a second look by design)*
+- polarity is positive but emotion is anger / disgust / sadness / fear
+- polarity is neutral but emotion is anger or joy
+- two or more prior turns and confidence is below `0.80`
+
+The LLM returns polarity, emotion, intent, topic, a one-line reason and evidence spans. If the LLM is down, the system keeps the Tier-1 result and marks the turn `degraded`.
+
+**Rule signals:** escalation keywords (`refund`, `chargeback`, `consumer court`, `fraud`, `scam`, `safety`…), explicit requests for a human, shouting (≥ 50 % capitals), 3+ exclamation marks, and repeat-contact phrases ("third time", "already told you"). Safety / legal / fraud keywords set urgency to **critical**.
+
+### 🚨 Escalation ladder
+
+| Level | Triggers (simplified) | What happens |
+|---|---|---|
+| `URGENT_HANDOFF` | critical urgency · legal/safety/fraud keyword · customer asks for a human | Immediate handoff with a masked package |
+| `HUMAN_REVIEW` | high urgency · repeated complaint + negative · declining trend · 4+ turns and negative | Flagged to the human desk |
+| `FOLLOW_UP` | medium urgency or non-positive dissatisfaction | Logged for quality follow-up |
+| `NONE` | positive / neutral | Bot handles it |
+
+The reply prompt forbids promising refunds or compensation, and refund-related language also feeds the escalation signals — so money decisions land with a person.
+
+### 📚 Grounded replies (RAG)
+
+Policy markdown in `data/policies/` is chunked by heading, indexed in SQLite **FTS5** (BM25-ranked), and the top matches are injected into the reply prompt with their source IDs. It uses only the Python standard library — no vector database. Retrieval runs on the **masked** text and fails open.
+
+### 🔁 Model gateway
+
+`Ollama (default) → Groq (if a key is set) → template reply`. Each hop is logged with model and latency, so a dead model never produces a dead chat.
+
+### 🎭 Avatar
+
+The backend returns an `AvatarDirective` (expression, intensity, voice tone, speech rate, gesture). The frontend renders it with `react-ai-avatar` in three styles — **Portrait**, **Adaptive Vector**, **Memoji** — and speaks replies with the browser's speech synthesis. Unit tests lock in the "never cheerful when angry or escalated" rule.
+
+## 📊 Results from the demo session
+
+Numbers below are **read from the analytics dashboard** during an 80-turn demo run on a laptop (RTX 4050, local `llama3.2:3b`). They are measurements of the system's behaviour, not accuracy claims.
+
+| Metric | Value |
+|---|---|
+| Turns processed | 80 |
+| Sentiment mix | 17 positive · 22 neutral · 41 negative |
+| Average model confidence | 85 % |
+| Turns sent to Tier-2 LLM review | 55 % |
+| Average end-to-end latency (incl. local LLM) | ≈ 3.6 s |
+
+> Confidence is the model's own score, not labelled accuracy. A proper evaluation on labelled retail data is on the [roadmap](#-honest-limitations--roadmap).
+
+## 🧰 Tech stack
+
+| Layer | Technology |
+|---|---|
+| API | FastAPI, Pydantic v2, SQLAlchemy 2 (async) + SQLite, SSE streaming, structlog |
+| NLP | Hugging Face Transformers + PyTorch, spaCy, Presidio |
+| LLM | Ollama (`llama3.2:3b`) · optional Groq · template fallback |
+| Privacy | Presidio, custom recognizers, `cryptography` (Fernet) |
+| Retrieval | SQLite FTS5 (stdlib) |
+| Frontend | React 19, TypeScript, Vite, Tailwind CSS 4, Recharts, Motion |
+| Quality | pytest + pytest-asyncio, request-ID tracing middleware |
+
+## 🚀 Quick start
+
+**Prerequisites:** Python 3.11+, Node 18+, and [Ollama](https://ollama.com/).
+The first run downloads the two Hugging Face models (about 1 GB total).
 
 ```bash
-# 1. Install & start Ollama
-curl -fsSL https://ollama.com/install.sh | sh
+# 1 · Local LLM
 ollama pull llama3.2:3b
 ollama serve &
 
-# 2. Clone the repository
+# 2 · Backend
 git clone https://github.com/VAIBHAV7848/TCS-Retail-Sentiment-Chatbot.git
 cd TCS-Retail-Sentiment-Chatbot
-
-# 3. Setup Python virtual environment
-python -m venv .venv
-source .venv/bin/activate
-
-# 4. Install backend dependencies & spaCy weights
+python -m venv .venv && source .venv/bin/activate     # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 python -m spacy download en_core_web_sm
-
-# 5. Initialize environment & build the policy RAG index
 cp .env.example .env
-python scripts/ingest_policies.py
+python scripts/ingest_policies.py                      # builds the policy index
+uvicorn app.main:app --reload --port 8000
 
-# 6. Start the FastAPI backend
-uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+# 3 · Frontend (new terminal)
+cd frontend && npm install && npm run dev              # → http://localhost:5173
 ```
 
-### 2. Setup & Launch Frontend
+**Set a stable vault key** (otherwise a random one is generated on every restart):
 
 ```bash
-cd frontend
-npm install
-npm run dev
+python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"
+# paste the output into .env as VAULT_ENCRYPTION_KEY=...
 ```
 
-Open `http://localhost:5173` in your browser.
+**Optional cloud fallback:** set `GROQ_API_KEY` in `.env`. With `LLM_PROVIDER=ollama` (default) Groq is only used if Ollama fails.
 
----
+## 🧪 Try these 7 scenarios
 
-## 🧪 Built-in Test Scenarios
+The UI has one-click demo buttons. What each one exercises:
 
-The web interface features 7 real benchmark scenarios to test the intelligence engine:
+| # | Scenario | Message | What to watch |
+|---|---|---|---|
+| 1 | Customer delight | *"I absolutely love this product! … Best purchase ever!"* | Positive polarity, warm avatar, no escalation |
+| 2 | Policy inquiry | *"What is your return policy for electronics?…"* | Retrieval pulls the returns policy; reply cites its source |
+| 3 | Delivery delay | *"My order #ORD-4521 hasn't arrived yet. It's been 10 days!…"* | Negative sentiment, order ID masked, empathetic tone |
+| 4 | Hostile + legal threat | *"THIRD time… FULL REFUND… consumer court"* | Critical urgency → urgent handoff to the human desk |
+| 5 | **PII interception** | *"I am Priya Sharma, my email is … Aadhaar … Call me at …"* | Name, email, Aadhaar, phone become tags; the model only sees tags |
+| 6 | Sarcasm | *"Great, another delay. Exactly what I needed…"* | Positive words but negative emotion → Tier-2 review is triggered to re-read the turn |
+| 7 | Human request | *"…connect me immediately to a real human representative."* | Instant urgent handoff |
 
-| # | Scenario Title | Input Pattern | Expected System Reaction |
-|:--|:---------------|:--------------|:-------------------------|
-| `01` | **Customer Delight** | *"I absolutely love this product! Delivery was super fast."* | Polarity: POSITIVE (0.98) • 3D Avatar smiles with joy. |
-| `02` | **Policy Inquiry** | *"What is your return policy for electronics?"* | RAG extracts 15-day policy citation `[electronics_v1.2]` accurately. |
-| `03` | **Delivery Delay** | *"My order #ORD-4521 hasn't arrived in 10 days!"* | Polarity: FRUSTRATED • Empathetic tone with tracking status. |
-| `04` | **Hostile & Escalation** | *"Third time contacting you! I want a FULL REFUND or court!"* | Urgent handoff triggered • Dispatched to Human Agent Desk. |
-| `05` | **PII Interception** | *"Priya Sharma, Aadhaar 4832 9812 5467, call 9845012345."* | Aadhaar & mobile tokenized to vault • 0 raw data to LLM. |
-| `06` | **Sarcasm Detection** | *"Great, another delay. Exactly what I needed. Wonderful."* | Tier-2 LLM overrules superficial positive words to NEGATIVE. |
-| `07` | **Speak to Real Human** | *"Transfer me to a live agent immediately."* | Instant seamless supervisor takeover with conversation package. |
+## 📡 API
 
----
+| Method | Endpoint | Purpose |
+|---|---|---|
+| `POST` | `/chat` | Run a message through the full pipeline |
+| `POST` | `/chat/stream` | Same, streamed over Server-Sent Events |
+| `POST` | `/chat/human/handoff` | Move a session from the bot to a human |
+| `POST` | `/chat/human/send` | Human agent ↔ customer messaging |
+| `GET` | `/chat/human/active-sessions` | Queue for the human desk |
+| `GET` | `/chat/sessions/{session_id}/messages` | Session transcript |
+| `GET` | `/cases` · `/cases/{case_id}` | Escalated cases (masked summaries) |
+| `GET` | `/dashboard/summary` | Aggregated analytics |
+| `POST` | `/privacy/preview` | Show raw vs masked text and detected entities |
+| `DELETE` | `/session/{session_id}` | Delete a session |
+| `GET` | `/health` | Liveness check |
 
-## 🛡️ Senior Engineering Design Decisions
+Interactive docs: `http://localhost:8000/docs`.
 
-### 1. Mathematical PII Defense vs. LLM Prompt Redaction
-Prompting an LLM to "redact personal data" is inherently non-deterministic and leaks credentials during prompt-injection attacks. SentimentIQ enforces deterministic regex with mathematical checksum validation (Luhn algorithm for credit cards, Verhoeff for Aadhaar) and Presidio NER **before** the input string reaches any model context.
-
-### 2. Two-Tier Sentiment Strategy
-Running every user utterance through a large generative LLM introduces significant latency and cost. SentimentIQ uses a fast (~50ms) local transformer model for >85% of turns. The LLM second opinion is dispatched only when model confidence is low, polarity conflicts with emotion, or sarcasm is suspected.
-
-### 3. Fail-Closed Privacy vs. Fail-Open Knowledge
-- **Privacy (Fail-Closed):** If tokenization fails or the encryption vault is unavailable, the pipeline halts immediately. No unmasked data ever leaves the boundary.
-- **Knowledge Retrieval (Fail-Open):** If policy search yields no matches, the system gracefully falls back to structured empathy and flags human review rather than crashing.
-
----
-
-## 📡 API Reference
-
-| Method | Endpoint | Description |
-|:-------|:---------|:------------|
-| `POST` | `/chat` | Executes inbound message through 4-agent pipeline. |
-| `POST` | `/chat/stream` | Server-Sent Events (SSE) streaming chat endpoint. |
-| `POST` | `/chat/human/handoff` | Transfers session from AI agent to human specialist. |
-| `POST` | `/chat/human/send` | Bidirectional messaging for supervisor console. |
-| `GET`  | `/chat/human/active-sessions` | Returns active customer queues for human agents. |
-| `GET`  | `/dashboard/summary` | Aggregated analytics: sentiment distribution, escalation counts. |
-| `GET`  | `/cases/{id}` | Fetches encrypted escalation case package. |
-| `POST` | `/privacy/preview` | Diagnostic endpoint comparing raw vs. masked text. |
-| `GET`  | `/health` | Health check endpoint reporting database and model status. |
-
----
-
-## 📂 Repository Structure
-
-```
-.
-├── app/
-│   ├── agents/              # 4 core agents (preprocess, privacy, sentiment, response)
-│   ├── api/                 # FastAPI routes (chat, stream, human handoff, dashboard)
-│   ├── core/                # Settings & pydantic configuration schemas
-│   ├── data/                # Database models & repositories (sessions, messages, vault)
-│   ├── model_gateway/       # Gateway routing between Ollama, Groq, and local fallbacks
-│   ├── observability/       # Correlation ID tracing & latency logging
-│   ├── orchestration/       # Graph controller, routing logic, and policies
-│   ├── privacy/             # Masker, vault, Indian PII recognizers, output scanner
-│   ├── retrieval/           # SQLite FTS5 search & term-frequency reranker
-│   └── sentiment/           # RoBERTa polarity, emotion model, and tier-2 reviewer
-├── data/
-│   └── policies/            # Markdown retail policy documents indexed by RAG
-├── docs/
-│   └── assets/              # Launch video (brag.mp4), demo GIF, and UI screenshots
-├── frontend/                # React 19 + TypeScript + Vite + Tailwind + Three.js
-├── scripts/
-│   └── ingest_policies.py   # CLI tool to rebuild SQLite FTS5 knowledge base
-└── tests/
-    ├── integration/         # Full pipeline end-to-end integration tests
-    └── unit/                # Unit tests for preprocessing, privacy, and sentiment rules
-```
-
----
-
-## 🧪 Verification & Testing
-
-Execute the test suite to verify pipeline integrity:
+## ✅ Tests
 
 ```bash
 pytest tests/ -v
 ```
 
-All 18 unit and integration tests validate:
-- Preprocessing preservation of emojis, caps, and negations.
-- Checksum and NER detection of Aadhaar, PAN, UPI, cards, and mobile numbers.
-- Emotion mapping and escalation rule triggers.
-- End-to-end multi-agent pipeline execution.
+Unit tests cover preprocessing, PII recognizers (Luhn, **Verhoeff**, Aadhaar/PAN/card/UPI/phone), the vault round-trip, output scanning, escalation rules and the avatar rules. Integration tests drive the real FastAPI app end to end (health, privacy preview, chat, escalation, dashboard, cases, human handoff). They load the real models, so the first run is slow.
 
----
+## ⚠️ Honest limitations & roadmap
+
+This is a hackathon-built prototype. Here is what it is not yet — and what is next.
+
+| Area | Today | Next |
+|---|---|---|
+| **Auth** | No authentication on any endpoint | API keys / OAuth; role-based access for the human desk |
+| **Vault** | In-memory, no expiry; restarting loses mappings | Persistent encrypted store with TTL and key rotation |
+| **Evaluation** | Confidence is reported, but no labelled benchmark yet | Evaluate on a labelled retail dataset (accuracy / F1, PII recall) |
+| **Latency** | ≈ 3.6 s end-to-end with a local 3B LLM | Smaller Tier-2 trigger, response streaming, quantised or hosted models |
+| **Escalation rules** | Keyword-based, so some phrases over-trigger | Learned escalation model; per-tenant tuning |
+| **Languages** | English only (Hinglish not handled) | Hinglish / Indic-language support |
+| **Scaling** | Single-process singletons (models, vault) | Redis-backed vault, worker-safe model serving, Docker Compose |
+| **PII** | Regex + NER; Aadhaar candidates are over-masked on purpose | Context-aware detection to cut false positives |
+
+## 📂 Repository structure
+
+```
+.
+├── app/
+│   ├── agents/           # preprocess · privacy · sentiment · response · escalation · avatar
+│   ├── api/              # chat, SSE, human handoff, cases, dashboard, privacy, session, health
+│   ├── core/             # settings + Pydantic schemas
+│   ├── data/             # async SQLAlchemy models & repositories
+│   ├── model_gateway/    # Ollama → Groq → template fallback
+│   ├── observability/    # request-ID tracing & metrics
+│   ├── orchestration/    # pipeline graph, router, policies
+│   ├── privacy/          # masker, vault, Indian recognizers, output scan
+│   ├── retrieval/        # SQLite FTS5 policy search
+│   └── sentiment/        # polarity, emotion, rules, Tier-2 review
+├── data/policies/        # markdown policies indexed by retrieval
+├── frontend/             # React 19 + TypeScript + Vite + Tailwind
+├── scripts/              # ingest_policies.py
+├── tests/                # unit + integration
+└── docs/                 # architecture plans, decisions, demo assets
+```
+
+## 🙌 Built for TCS Technology Day
+
+Designed and built at **M.S. Sheshgiri College of Engineering & Technology, Belagavi**, and recognised as the winning project of the TCS Technology Day hackathon.
+
+Maintained by **[@VAIBHAV7848](https://github.com/VAIBHAV7848)**.
+
+## 📄 License
+
+Released under the [MIT License](LICENSE).
 
 <div align="center">
-
-**Built at M.S. Sheshgiri College of Engineering & Technology, Belagavi for TCS Technology Day.**  
-*Recognized as the Hackathon-Winning Project.*
-
+<sub>If this project helped or inspired you, a ⭐ goes a long way.</sub>
 </div>
