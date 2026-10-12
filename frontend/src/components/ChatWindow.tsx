@@ -254,8 +254,8 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({
               <Loader2 className="w-4 h-4 text-[#0071e3] animate-spin" />
               <div className="flex items-center gap-1.5 text-xs">
                 <span>Executing multi-agent evaluation...</span>
-                <span className={`text-[10px] font-mono ${isDark ? 'text-slate-400' : 'text-[#86868b]'}`}>
-                  (PII Mask &rarr; RoBERTa &rarr; 120B LLM)
+                <span className={`text-[10px] font-mono ${isDark ? 'text-slate-400' : 'text-[#6b7280]'}`}>
+                  (PII Mask &rarr; RoBERTa &rarr; Local llama3.2:3b GPU)
                 </span>
               </div>
             </div>

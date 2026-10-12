@@ -30,6 +30,7 @@ class Settings(BaseSettings):
     groq_api_key: str = ""
     gemini_api_key: str = ""
     openai_api_key: str = ""
+    stitch_api_key: str = ""
 
     # Models
     sentiment_model: str = "cardiffnlp/twitter-roberta-base-sentiment-latest"

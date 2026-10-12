@@ -430,7 +430,7 @@ export const AvatarPanel: React.FC<AvatarPanelProps> = ({
                 {isSpeaking
                   ? 'Speaking (PCM Reactive Lip-Sync)'
                   : loading
-                  ? 'Reasoning (120B Inference)'
+                  ? 'Reasoning (Local llama3.2:3b GPU)'
                   : 'Listening & Attentive'}
               </span>
             </div>

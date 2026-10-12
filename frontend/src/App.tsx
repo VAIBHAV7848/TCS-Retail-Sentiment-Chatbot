@@ -61,37 +61,44 @@ export const App: React.FC = () => {
 
   return (
     <div className={`flex flex-col h-screen w-screen font-sans antialiased overflow-hidden transition-colors duration-200 ${
-      theme === 'dark' ? 'dark bg-[#08090c] text-slate-100' : 'bg-[#f5f5f7] text-[#1d1d1f]'
+      theme === 'dark' ? 'dark bg-[#090b10] text-slate-100' : 'bg-[#f9f9fc] text-[#111827]'
     }`}>
-      {/* Apple / Google Antigravity Editorial Header */}
+      {/* Apple / Google Stitch Editorial Header */}
       <header className={`h-14 border-b px-6 flex items-center justify-between flex-shrink-0 z-30 transition-colors backdrop-blur-xl ${
         theme === 'dark'
-          ? 'bg-[#0b0d12]/90 border-white/8 text-white'
-          : 'bg-white/85 border-black/8 text-[#1d1d1f] shadow-xs'
+          ? 'bg-[#0e121a]/90 border-white/8 text-white'
+          : 'bg-white/90 border-[#eceef2] text-[#111827] shadow-xs'
       }`}>
         <div className="flex items-center gap-3">
           <div className={`w-8 h-8 rounded-xl flex items-center justify-center transition-all ${
             theme === 'dark'
-              ? 'bg-white/8 border border-white/10 text-blue-400'
-              : 'bg-black/5 border border-black/8 text-blue-600 shadow-xs'
+              ? 'bg-white/8 border border-white/10 text-indigo-400'
+              : 'bg-indigo-50 border border-indigo-100 text-[#4648d4] shadow-xs'
           }`}>
             <Bot className="w-4 h-4" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className={`font-semibold text-sm tracking-tight ${theme === 'dark' ? 'text-white' : 'text-[#1d1d1f]'}`}>
+              <span className={`font-headline font-bold text-sm tracking-tight ${theme === 'dark' ? 'text-white' : 'text-[#111827]'}`}>
                 RetailSense
               </span>
               <span className={`text-[10px] font-mono uppercase px-2 py-0.5 rounded-full border ${
                 theme === 'dark'
                   ? 'bg-white/6 text-slate-300 border-white/8'
-                  : 'bg-black/5 text-[#48484a] border-black/8 font-medium'
+                  : 'bg-black/5 text-[#48484a] border-[#eceef2] font-medium'
               }`}>
                 4-Agent Orchestrator
               </span>
+              <span className={`hidden sm:inline-flex text-[10px] font-mono px-2 py-0.5 rounded-full border ${
+                theme === 'dark'
+                  ? 'bg-indigo-500/10 text-indigo-300 border-indigo-500/20'
+                  : 'bg-indigo-50 text-[#4648d4] border-indigo-100 font-medium'
+              }`}>
+                Stitch: Ceramic Levitation
+              </span>
             </div>
-            <p className={`text-[10px] hidden sm:block ${theme === 'dark' ? 'text-slate-400' : 'text-[#86868b]'}`}>
-              Privacy-by-Design &bull; Sentiment-Adaptive Avatar &bull; Realtime Escalation
+            <p className={`text-[10px] hidden sm:block ${theme === 'dark' ? 'text-slate-400' : 'text-[#6b7280]'}`}>
+              Privacy Vault &bull; Sentiment-Adaptive 3D Avatar &bull; Realtime Escalation
             </p>
           </div>
         </div>
@@ -100,8 +107,8 @@ export const App: React.FC = () => {
         <div className="flex items-center gap-3">
           <div className={`flex rounded-xl p-1 border shadow-xs transition-colors ${
             theme === 'dark'
-              ? 'bg-[#141822] border-white/8'
-              : 'bg-[#e5e5ea] border-black/6'
+              ? 'bg-[#151b26] border-white/8'
+              : 'bg-[#eef1f6] border-[#eceef2]'
           }`}>
             <button
               onClick={() => setActiveTab('chat')}
@@ -109,10 +116,10 @@ export const App: React.FC = () => {
                 activeTab === 'chat'
                   ? theme === 'dark'
                     ? 'bg-white/14 text-white shadow-sm'
-                    : 'bg-white text-[#1d1d1f] shadow-xs'
+                    : 'bg-white text-[#111827] shadow-xs'
                   : theme === 'dark'
                   ? 'text-slate-400 hover:text-slate-200'
-                  : 'text-[#86868b] hover:text-[#1d1d1f]'
+                  : 'text-[#6b7280] hover:text-[#111827]'
               }`}
             >
               <MessageSquare className="w-3.5 h-3.5" />
@@ -125,10 +132,10 @@ export const App: React.FC = () => {
                 activeTab === 'dashboard'
                   ? theme === 'dark'
                     ? 'bg-white/14 text-white shadow-sm'
-                    : 'bg-white text-[#1d1d1f] shadow-xs'
+                    : 'bg-white text-[#111827] shadow-xs'
                   : theme === 'dark'
                   ? 'text-slate-400 hover:text-slate-200'
-                  : 'text-[#86868b] hover:text-[#1d1d1f]'
+                  : 'text-[#6b7280] hover:text-[#111827]'
               }`}
             >
               <BarChart3 className="w-3.5 h-3.5" />
@@ -142,7 +149,7 @@ export const App: React.FC = () => {
             className={`flex items-center justify-center w-8 h-8 rounded-xl border transition-all ${
               theme === 'dark'
                 ? 'bg-white/6 border-white/10 text-amber-300 hover:bg-white/10'
-                : 'bg-white border-black/8 text-slate-700 hover:bg-black/5 shadow-xs'
+                : 'bg-white border-[#eceef2] text-slate-700 hover:bg-black/5 shadow-xs'
             }`}
             title={`Switch to ${theme === 'light' ? 'Dark' : 'White'} Mode`}
           >
@@ -151,11 +158,11 @@ export const App: React.FC = () => {
 
           <div className={`hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded-lg border text-[10px] font-mono transition-colors ${
             theme === 'dark'
-              ? 'bg-white/4 border-white/6 text-slate-300'
-              : 'bg-white border-black/8 text-[#48484a] shadow-xs'
+              ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-300'
+              : 'bg-emerald-50 border-emerald-200 text-emerald-800 shadow-xs'
           }`}>
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-            <span>CUDA GPU Active</span>
+            <span>Local GPU: llama3.2:3b</span>
           </div>
         </div>
       </header>

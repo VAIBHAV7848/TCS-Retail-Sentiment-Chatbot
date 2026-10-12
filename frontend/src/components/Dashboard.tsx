@@ -188,7 +188,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ theme = 'light' }) => {
               {Math.round((data?.tier2_rate || 0.28) * 100)}%
             </div>
             <div className={`text-[10px] mt-1 font-mono ${isDark ? 'text-slate-400' : 'text-[#86868b]'}`}>
-              Groq GPT-OSS 120B
+              Local llama3.2:3b / Groq
             </div>
           </div>
 
@@ -205,7 +205,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ theme = 'light' }) => {
               {Math.round(data?.avg_latency_ms || 118)} ms
             </div>
             <div className={`text-[10px] mt-1 font-mono ${isDark ? 'text-slate-400' : 'text-[#86868b]'}`}>
-              CUDA Accelerated
+              RTX 4050 GPU (80 tok/s)
             </div>
           </div>
         </div>
