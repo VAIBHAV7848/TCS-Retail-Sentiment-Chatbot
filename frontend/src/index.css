@@ -4,22 +4,53 @@
   :root {
     --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
     --font-mono: "SF Mono", Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+
+    /* Light Mode Tokens (Apple / Antigravity Aesthetic) */
+    --color-canvas: #f5f5f7;
+    --color-surface: #ffffff;
+    --color-surface-elevated: #ffffff;
+    --color-surface-subtle: #fbfbfd;
+    --color-surface-inset: #f0f0f2;
+    --color-border: rgba(0, 0, 0, 0.08);
+    --color-border-hover: rgba(0, 0, 0, 0.16);
+    --color-text-primary: #1d1d1f;
+    --color-text-secondary: #48484a;
+    --color-text-muted: #86868b;
+    --color-card-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 14px rgba(0, 0, 0, 0.03);
+    --color-scrollbar-thumb: rgba(0, 0, 0, 0.16);
+  }
+
+  .dark {
+    /* Dark Mode Tokens */
+    --color-canvas: #08090c;
+    --color-surface: #0d0f14;
+    --color-surface-elevated: #141822;
+    --color-surface-subtle: #0f1218;
+    --color-surface-inset: #161a22;
+    --color-border: rgba(255, 255, 255, 0.08);
+    --color-border-hover: rgba(255, 255, 255, 0.16);
+    --color-text-primary: #f8fafc;
+    --color-text-secondary: #cbd5e1;
+    --color-text-muted: #94a3b8;
+    --color-card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+    --color-scrollbar-thumb: rgba(255, 255, 255, 0.16);
   }
 
   body {
     margin: 0;
     padding: 0;
-    background-color: #08090c;
-    color: #e2e8f0;
+    background-color: var(--color-canvas);
+    color: var(--color-text-primary);
     font-family: var(--font-sans);
-    letter-spacing: -0.011em;
+    letter-spacing: -0.012em;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     overflow: hidden;
+    transition: background-color 0.25s ease, color 0.25s ease;
   }
 }
 
-/* Custom minimal scrollbar */
+/* Custom Minimal Scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -30,37 +61,45 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.12);
+  background: var(--color-scrollbar-thumb);
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.22);
+  background: rgba(0, 0, 0, 0.28);
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.28);
 }
 
 /* Hairline borders inspired by Apple & Google Antigravity */
 .border-subtle {
-  border-color: rgba(255, 255, 255, 0.08);
+  border-color: var(--color-border);
 }
 
 .border-subtle-hover:hover {
-  border-color: rgba(255, 255, 255, 0.16);
+  border-color: var(--color-border-hover);
 }
 
 .surface-canvas {
-  background-color: #08090c;
+  background-color: var(--color-canvas);
 }
 
 .surface-panel {
-  background-color: #0f1218;
+  background-color: var(--color-surface);
 }
 
 .surface-card {
-  background-color: #141822;
+  background-color: var(--color-surface-elevated);
 }
 
-.surface-elevated {
-  background-color: #1a1f2c;
+.surface-subtle {
+  background-color: var(--color-surface-subtle);
+}
+
+.surface-inset {
+  background-color: var(--color-surface-inset);
 }
 
 /* Smooth motion utilities */
@@ -68,11 +107,17 @@
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Subtle glow for critical alerts only */
-.alert-glow-rose {
-  box-shadow: 0 0 24px -4px rgba(244, 63, 94, 0.15);
+/* Apple typography utility classes */
+.text-apple-title {
+  color: var(--color-text-primary);
+  font-weight: 600;
+  letter-spacing: -0.02em;
 }
 
-.alert-glow-amber {
-  box-shadow: 0 0 24px -4px rgba(245, 158, 11, 0.15);
+.text-apple-body {
+  color: var(--color-text-secondary);
+}
+
+.text-apple-caption {
+  color: var(--color-text-muted);
 }

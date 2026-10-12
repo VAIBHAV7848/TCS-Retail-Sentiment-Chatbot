@@ -9,6 +9,7 @@ interface AvatarPanelProps {
   sentiment?: SentimentData | null;
   loading?: boolean;
   latestReply?: string;
+  theme?: 'light' | 'dark';
 }
 
 type AvatarDisplayMode = 'portrait' | 'adaptive_vector' | 'memoji';
@@ -18,6 +19,7 @@ export const AvatarPanel: React.FC<AvatarPanelProps> = ({
   sentiment,
   loading = false,
   latestReply = '',
+  theme = 'light',
 }) => {
   const [avatarMode, setAvatarMode] = useState<AvatarDisplayMode>('portrait');
   const [ttsEnabled, setTtsEnabled] = useState(false);
@@ -82,35 +84,29 @@ export const AvatarPanel: React.FC<AvatarPanelProps> = ({
     }
 
     try {
-      // Create voice formant oscillator driving analyser input
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
       const lfo = ctx.createOscillator();
       const lfoGain = ctx.createGain();
 
-      // Vocal pitch range (~150Hz to ~220Hz with natural vibrato)
       osc.type = 'sawtooth';
       osc.frequency.setValueAtTime(180, ctx.currentTime);
 
-      // Tremolo/vocal modulation
       lfo.frequency.setValueAtTime(4.5, ctx.currentTime);
       lfoGain.gain.setValueAtTime(25, ctx.currentTime);
       lfo.connect(lfoGain);
       lfoGain.connect(osc.frequency);
 
-      // Gain tailored to driver without audible speaker blast (dedicated to analyser)
       gain.gain.setValueAtTime(0.08, ctx.currentTime);
 
       osc.connect(gain);
       gain.connect(node);
 
-      // Start audio generators
       lfo.start();
       osc.start();
       oscillatorRef.current = osc;
       gainNodeRef.current = gain;
 
-      // Monitor frequency levels for visualization
       const dataArray = new Uint8Array(node.frequencyBinCount);
       const updateLevel = () => {
         if (!node) return;
@@ -125,7 +121,7 @@ export const AvatarPanel: React.FC<AvatarPanelProps> = ({
       };
       updateLevel();
     } catch (e) {
-      console.warn('Audio simulation node connect error:', e);
+      console.warn('Audio simulation error:', e);
     }
   }, [getOrCreateAnalyser]);
 
@@ -150,7 +146,6 @@ export const AvatarPanel: React.FC<AvatarPanelProps> = ({
     setAudioLevel(0);
   }, []);
 
-  // Clean up Web Audio on unmount
   useEffect(() => {
     return () => {
       stopAudioSimulation();
@@ -160,7 +155,6 @@ export const AvatarPanel: React.FC<AvatarPanelProps> = ({
     };
   }, [stopAudioSimulation]);
 
-  // Handle SpeechSynthesis when new reply arrives and TTS is enabled
   useEffect(() => {
     if (!ttsEnabled || !latestReply || typeof window === 'undefined') return;
     if (!('speechSynthesis' in window)) return;
@@ -169,7 +163,6 @@ export const AvatarPanel: React.FC<AvatarPanelProps> = ({
     const utterance = new SpeechSynthesisUtterance(latestReply);
     utterance.rate = directive.speech_rate || 1.0;
 
-    // Adjust pitch based on tone directive
     if (directive.voice_tone?.includes('calm') || directive.voice_tone?.includes('apologetic')) {
       utterance.pitch = 0.9;
     } else if (directive.voice_tone?.includes('friendly') || directive.voice_tone?.includes('warm')) {
@@ -202,7 +195,6 @@ export const AvatarPanel: React.FC<AvatarPanelProps> = ({
     };
   }, [latestReply, ttsEnabled, directive.speech_rate, directive.voice_tone, startAudioSimulation, stopAudioSimulation]);
 
-  // Derive realtime-avatar state from pipeline state
   const getAiAvatarState = (): 'speaking' | 'thinking' | 'listening' | 'idle' => {
     if (loading) return 'thinking';
     if (isSpeaking) return 'speaking';
@@ -211,7 +203,6 @@ export const AvatarPanel: React.FC<AvatarPanelProps> = ({
 
   const aiAvatarState = getAiAvatarState();
 
-  // Expression visual profile parameters for the custom SVG morph
   const getExpressionData = () => {
     switch (expression) {
       case 'warm_smile':
@@ -237,7 +228,7 @@ export const AvatarPanel: React.FC<AvatarPanelProps> = ({
           rightEyeScaleY: 1.05,
           blushOpacity: 0.1,
           headTilt: 'rotate(-2deg)',
-          accentColor: '#38bdf8',
+          accentColor: '#0284c7',
           status: 'Attentive & Active',
         };
       case 'concerned':
@@ -250,7 +241,7 @@ export const AvatarPanel: React.FC<AvatarPanelProps> = ({
           rightEyeScaleY: 0.85,
           blushOpacity: 0.25,
           headTilt: 'rotate(1deg) translateY(2px)',
-          accentColor: '#f59e0b',
+          accentColor: '#d97706',
           status: 'Empathetic & Concerned',
         };
       case 'serious':
@@ -263,7 +254,7 @@ export const AvatarPanel: React.FC<AvatarPanelProps> = ({
           rightEyeScaleY: 0.8,
           blushOpacity: 0.0,
           headTilt: 'rotate(0deg)',
-          accentColor: '#f43f5e',
+          accentColor: '#e11d48',
           status: 'Direct & De-escalating',
         };
       case 'gentle':
@@ -276,7 +267,7 @@ export const AvatarPanel: React.FC<AvatarPanelProps> = ({
           rightEyeScaleY: 0.95,
           blushOpacity: 0.4,
           headTilt: 'rotate(1deg)',
-          accentColor: '#a855f7',
+          accentColor: '#9333ea',
           status: 'Gentle & Patient',
         };
       case 'reassuring':
@@ -289,7 +280,7 @@ export const AvatarPanel: React.FC<AvatarPanelProps> = ({
           rightEyeScaleY: 1.0,
           blushOpacity: 0.35,
           headTilt: 'rotate(-1deg)',
-          accentColor: '#06b6d4',
+          accentColor: '#0891b2',
           status: 'Supportive & Reassuring',
         };
       case 'composed':
@@ -303,34 +294,51 @@ export const AvatarPanel: React.FC<AvatarPanelProps> = ({
           rightEyeScaleY: 1.0,
           blushOpacity: 0.15,
           headTilt: 'rotate(0deg)',
-          accentColor: '#94a3b8',
+          accentColor: '#64748b',
           status: 'Calm & Professional',
         };
     }
   };
 
   const expData = getExpressionData();
+  const isDark = theme === 'dark';
 
   return (
-    <div className="flex flex-col h-full bg-[#0d0f14] border border-white/8 rounded-2xl p-5 overflow-hidden shadow-xl relative">
+    <div className={`flex flex-col h-full rounded-2xl border p-5 overflow-hidden transition-colors relative ${
+      isDark
+        ? 'bg-[#0d0f14] border-white/8 shadow-xl text-white'
+        : 'bg-white border-black/8 shadow-sm text-[#1d1d1f]'
+    }`}>
       {/* Header with Segmented Avatar Selector */}
-      <div className="flex items-center justify-between pb-3.5 border-b border-white/6 flex-shrink-0">
+      <div className={`flex items-center justify-between pb-3.5 border-b flex-shrink-0 ${
+        isDark ? 'border-white/6' : 'border-black/6'
+      }`}>
         <div className="flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-          <h2 className="text-xs font-semibold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
-            <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
+          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+          <h2 className={`text-xs font-semibold uppercase tracking-wider flex items-center gap-1.5 ${
+            isDark ? 'text-slate-300' : 'text-[#1d1d1f]'
+          }`}>
+            <Sparkles className="w-3.5 h-3.5 text-[#0071e3]" />
             AI Avatar Engine
           </h2>
         </div>
 
         {/* 3-Way Segmented Control */}
-        <div className="flex items-center bg-[#161a22] p-0.5 rounded-lg border border-white/6 text-[11px]">
+        <div className={`flex items-center p-0.5 rounded-xl border text-[11px] shadow-xs ${
+          isDark
+            ? 'bg-[#161a22] border-white/6 text-slate-400'
+            : 'bg-[#e5e5ea] border-black/6 text-[#86868b]'
+        }`}>
           <button
             onClick={() => setAvatarMode('portrait')}
-            className={`px-2.5 py-1 rounded-md font-medium transition-all ${
+            className={`px-2.5 py-1 rounded-lg font-medium transition-all ${
               avatarMode === 'portrait'
-                ? 'bg-white/12 text-white shadow-sm'
-                : 'text-slate-400 hover:text-slate-200'
+                ? isDark
+                  ? 'bg-white/12 text-white shadow-sm'
+                  : 'bg-white text-[#1d1d1f] shadow-xs'
+                : isDark
+                ? 'hover:text-slate-200'
+                : 'hover:text-[#1d1d1f]'
             }`}
             title="Interactive animated PortraitAvatar with WebAudio Analyser & dynamic poses"
           >
@@ -338,10 +346,14 @@ export const AvatarPanel: React.FC<AvatarPanelProps> = ({
           </button>
           <button
             onClick={() => setAvatarMode('adaptive_vector')}
-            className={`px-2.5 py-1 rounded-md font-medium transition-all ${
+            className={`px-2.5 py-1 rounded-lg font-medium transition-all ${
               avatarMode === 'adaptive_vector'
-                ? 'bg-white/12 text-white shadow-sm'
-                : 'text-slate-400 hover:text-slate-200'
+                ? isDark
+                  ? 'bg-white/12 text-white shadow-sm'
+                  : 'bg-white text-[#1d1d1f] shadow-xs'
+                : isDark
+                ? 'hover:text-slate-200'
+                : 'hover:text-[#1d1d1f]'
             }`}
             title="Morphing vector avatar reacting to 7 sentiment states"
           >
@@ -349,10 +361,14 @@ export const AvatarPanel: React.FC<AvatarPanelProps> = ({
           </button>
           <button
             onClick={() => setAvatarMode('memoji')}
-            className={`px-2.5 py-1 rounded-md font-medium transition-all ${
+            className={`px-2.5 py-1 rounded-lg font-medium transition-all ${
               avatarMode === 'memoji'
-                ? 'bg-white/12 text-white shadow-sm'
-                : 'text-slate-400 hover:text-slate-200'
+                ? isDark
+                  ? 'bg-white/12 text-white shadow-sm'
+                  : 'bg-white text-[#1d1d1f] shadow-xs'
+                : isDark
+                ? 'hover:text-slate-200'
+                : 'hover:text-[#1d1d1f]'
             }`}
             title="Realtime Memoji 3D face preset"
           >
@@ -366,10 +382,20 @@ export const AvatarPanel: React.FC<AvatarPanelProps> = ({
         {avatarMode === 'portrait' ? (
           /* Mode 1: Top-Notch PortraitAvatar inside RealtimeAvatar with BYOS variant + AnalyserNode */
           <div className="flex flex-col items-center justify-center w-full relative">
-            {/* Soft Ambient Glow */}
+            {/* Ambient Backlight Glow */}
             <div
-              className={`absolute w-56 h-56 rounded-full blur-3xl opacity-25 pointer-events-none transition-all duration-700 ${
-                isSpeaking ? 'bg-indigo-500 scale-110' : loading ? 'bg-amber-500 scale-100' : 'bg-blue-600/60'
+              className={`absolute w-56 h-56 rounded-full blur-3xl pointer-events-none transition-all duration-700 ${
+                isDark
+                  ? isSpeaking
+                    ? 'bg-indigo-500/25 scale-110'
+                    : loading
+                    ? 'bg-amber-500/20 scale-100'
+                    : 'bg-blue-600/20'
+                  : isSpeaking
+                  ? 'bg-blue-400/20 scale-110'
+                  : loading
+                  ? 'bg-amber-300/25 scale-100'
+                  : 'bg-slate-200/50'
               }`}
             />
 
@@ -390,13 +416,17 @@ export const AvatarPanel: React.FC<AvatarPanelProps> = ({
             </div>
 
             {/* Live State & Pose Indicator */}
-            <div className="mt-2.5 flex items-center gap-2 px-3 py-1 rounded-full bg-white/4 border border-white/8 backdrop-blur-sm">
+            <div className={`mt-2.5 flex items-center gap-2 px-3 py-1 rounded-full border shadow-xs ${
+              isDark
+                ? 'bg-white/4 border-white/8 text-slate-300'
+                : 'bg-[#f5f5f7] border-black/6 text-[#48484a]'
+            }`}>
               <span
                 className={`w-1.5 h-1.5 rounded-full ${
-                  isSpeaking ? 'bg-emerald-400 animate-ping' : loading ? 'bg-amber-400 animate-pulse' : 'bg-blue-400'
+                  isSpeaking ? 'bg-emerald-500 animate-ping' : loading ? 'bg-amber-500 animate-pulse' : 'bg-blue-500'
                 }`}
               />
-              <span className="text-[11px] font-medium text-slate-300">
+              <span className="text-[11px] font-medium">
                 {isSpeaking
                   ? 'Speaking (PCM Reactive Lip-Sync)'
                   : loading
@@ -410,7 +440,7 @@ export const AvatarPanel: React.FC<AvatarPanelProps> = ({
           <div className="relative flex flex-col items-center justify-center">
             {/* Dynamic Emotion Backlight Ring */}
             <div
-              className="absolute w-48 h-48 rounded-full blur-3xl opacity-20 pointer-events-none transition-all duration-700"
+              className="absolute w-48 h-48 rounded-full blur-3xl pointer-events-none transition-all duration-700 opacity-20"
               style={{ backgroundColor: expData.accentColor }}
             />
 
@@ -418,7 +448,7 @@ export const AvatarPanel: React.FC<AvatarPanelProps> = ({
               className="w-48 h-48 relative transition-transform duration-500 ease-out flex items-center justify-center"
               style={{ transform: expData.headTilt }}
             >
-              <svg viewBox="0 0 200 200" className="w-full h-full drop-shadow-md">
+              <svg viewBox="0 0 200 200" className="w-full h-full drop-shadow-sm">
                 <defs>
                   <linearGradient id="faceGrad" x1="0%" y1="0%" x2="100%" y2="100%">
                     <stop offset="0%" stopColor="#fee2e2" />
@@ -431,7 +461,7 @@ export const AvatarPanel: React.FC<AvatarPanelProps> = ({
                 </defs>
 
                 {/* Head base */}
-                <circle cx="100" cy="100" r="76" fill="#0b0e14" opacity="0.4" />
+                <circle cx="100" cy="100" r="76" fill={isDark ? '#0b0e14' : '#e2e8f0'} opacity="0.3" />
                 <circle cx="100" cy="100" r="72" fill="url(#faceGrad)" stroke="#fda4af" strokeWidth="1.5" />
 
                 {/* Cheeks */}
@@ -495,9 +525,13 @@ export const AvatarPanel: React.FC<AvatarPanelProps> = ({
               </svg>
             </div>
 
-            <div className="mt-2.5 flex items-center gap-2 px-3 py-1 rounded-full bg-white/4 border border-white/8 backdrop-blur-sm">
+            <div className={`mt-2.5 flex items-center gap-2 px-3 py-1 rounded-full border shadow-xs ${
+              isDark
+                ? 'bg-white/4 border-white/8 text-slate-200'
+                : 'bg-[#f5f5f7] border-black/6 text-[#1d1d1f]'
+            }`}>
               <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: expData.accentColor }} />
-              <span className="text-xs font-medium text-slate-200">{expData.status}</span>
+              <span className="text-xs font-medium">{expData.status}</span>
             </div>
           </div>
         ) : (
@@ -514,67 +548,101 @@ export const AvatarPanel: React.FC<AvatarPanelProps> = ({
               />
             </div>
 
-            <div className="mt-2.5 flex items-center gap-2 px-3 py-1 rounded-full bg-white/4 border border-white/8 backdrop-blur-sm">
-              <span className="w-1.5 h-1.5 rounded-full bg-indigo-400" />
-              <span className="text-xs font-medium text-slate-200">Memoji Reactive 3D</span>
+            <div className={`mt-2.5 flex items-center gap-2 px-3 py-1 rounded-full border shadow-xs ${
+              isDark
+                ? 'bg-white/4 border-white/8 text-slate-200'
+                : 'bg-[#f5f5f7] border-black/6 text-[#1d1d1f]'
+            }`}>
+              <span className="w-1.5 h-1.5 rounded-full bg-indigo-500" />
+              <span className="text-xs font-medium">Memoji Reactive 3D</span>
             </div>
           </div>
         )}
       </div>
 
       {/* Audio Wave & WebAudio Analyser Status Bar */}
-      <div className="pt-3 border-t border-white/6 flex items-center justify-between text-xs text-slate-300 flex-shrink-0">
+      <div className={`pt-3 border-t flex items-center justify-between text-xs flex-shrink-0 transition-colors ${
+        isDark ? 'border-white/6 text-slate-300' : 'border-black/6 text-[#48484a]'
+      }`}>
         <div className="flex items-center gap-3">
           <button
             onClick={() => {
               getOrCreateAnalyser();
               setTtsEnabled(!ttsEnabled);
             }}
-            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-medium transition-all ${
+            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-medium transition-all ${
               ttsEnabled
-                ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30'
-                : 'bg-white/4 text-slate-400 border border-white/6 hover:text-slate-200'
+                ? 'bg-blue-50 text-blue-600 border border-blue-200 shadow-xs'
+                : isDark
+                ? 'bg-white/4 text-slate-400 border border-white/6 hover:text-slate-200'
+                : 'bg-[#f5f5f7] text-[#86868b] border border-black/6 hover:text-[#1d1d1f]'
             }`}
             title="Toggle text-to-speech audio voice output"
           >
-            {ttsEnabled ? <Volume2 className="w-3.5 h-3.5 text-blue-400" /> : <VolumeX className="w-3.5 h-3.5" />}
+            {ttsEnabled ? <Volume2 className="w-3.5 h-3.5 text-blue-600" /> : <VolumeX className="w-3.5 h-3.5" />}
             <span>{ttsEnabled ? 'Voice Active' : 'Voice Muted'}</span>
           </button>
 
           {/* Real-time PCM spectrum animation */}
           {isSpeaking && (
-            <div className="flex items-center gap-1 h-3.5 px-2 py-0.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-[10px] text-blue-300">
-              <Activity className="w-3 h-3 text-blue-400 animate-pulse" />
+            <div className="flex items-center gap-1 h-3.5 px-2 py-0.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-[10px] text-blue-600 font-mono">
+              <Activity className="w-3 h-3 text-blue-500 animate-pulse" />
               <span>{audioLevel > 0 ? `${audioLevel}% PCM` : 'Active'}</span>
             </div>
           )}
         </div>
 
-        <div className="flex items-center gap-1.5 text-[11px] text-slate-400 font-mono">
+        <div className={`flex items-center gap-1.5 text-[11px] font-mono ${
+          isDark ? 'text-slate-400' : 'text-[#86868b]'
+        }`}>
           <span>Tempo: {directive.speech_rate || 1.0}x</span>
         </div>
       </div>
 
       {/* Telemetry Readout Grid */}
-      <div className="mt-3 pt-3 border-t border-white/6 grid grid-cols-2 gap-2 text-[11px] text-slate-400 flex-shrink-0">
-        <div className="bg-[#12151c] px-2.5 py-1.5 rounded-lg border border-white/4">
-          <span className="text-[10px] uppercase text-slate-400 tracking-wider block font-medium">Tone Profile</span>
-          <span className="text-slate-200 font-medium capitalize truncate block">
+      <div className={`mt-3 pt-3 border-t grid grid-cols-2 gap-2 text-[11px] flex-shrink-0 ${
+        isDark ? 'border-white/6' : 'border-black/6'
+      }`}>
+        <div className={`px-2.5 py-1.5 rounded-xl border transition-colors ${
+          isDark
+            ? 'bg-[#12151c] border-white/4 text-slate-400'
+            : 'bg-[#f5f5f7] border-black/6 text-[#48484a]'
+        }`}>
+          <span className={`text-[10px] uppercase tracking-wider block font-medium ${
+            isDark ? 'text-slate-400' : 'text-[#86868b]'
+          }`}>
+            Tone Profile
+          </span>
+          <span className={`font-semibold capitalize truncate block ${
+            isDark ? 'text-slate-200' : 'text-[#1d1d1f]'
+          }`}>
             {directive.voice_tone ? directive.voice_tone.replace(/_/g, ' ') : 'Neutral Professional'}
           </span>
         </div>
 
-        <div className="bg-[#12151c] px-2.5 py-1.5 rounded-lg border border-white/4">
-          <span className="text-[10px] uppercase text-slate-400 tracking-wider block font-medium">Emotion Signal</span>
-          <span className="text-slate-200 font-medium capitalize truncate block">
+        <div className={`px-2.5 py-1.5 rounded-xl border transition-colors ${
+          isDark
+            ? 'bg-[#12151c] border-white/4 text-slate-400'
+            : 'bg-[#f5f5f7] border-black/6 text-[#48484a]'
+        }`}>
+          <span className={`text-[10px] uppercase tracking-wider block font-medium ${
+            isDark ? 'text-slate-400' : 'text-[#86868b]'
+          }`}>
+            Emotion Signal
+          </span>
+          <span className={`font-semibold capitalize truncate block ${
+            isDark ? 'text-slate-200' : 'text-[#1d1d1f]'
+          }`}>
             {sentiment?.emotion || 'Attentive'} ({sentiment ? Math.round(sentiment.confidence * 100) : 95}%)
           </span>
         </div>
       </div>
 
       {/* Safety Policy Label */}
-      <div className="mt-2.5 flex items-center gap-1.5 text-[10px] text-slate-400 flex-shrink-0">
-        <ShieldCheck className="w-3.5 h-3.5 text-emerald-400/80 flex-shrink-0" />
+      <div className={`mt-2.5 flex items-center gap-1.5 text-[10px] flex-shrink-0 ${
+        isDark ? 'text-slate-400' : 'text-[#86868b]'
+      }`}>
+        <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 flex-shrink-0" />
         <span className="truncate">Affect Guard: Cheerful affect restricted during escalation</span>
       </div>
     </div>

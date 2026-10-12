@@ -79,22 +79,43 @@ const DEMO_SCENARIOS: DemoScenario[] = [
 interface DemoButtonsProps {
   onSelectScenario: (prompt: string) => void;
   disabled?: boolean;
+  theme?: 'light' | 'dark';
 }
 
-export const DemoButtons: React.FC<DemoButtonsProps> = ({ onSelectScenario, disabled }) => {
+export const DemoButtons: React.FC<DemoButtonsProps> = ({
+  onSelectScenario,
+  disabled,
+  theme = 'light',
+}) => {
+  const isDark = theme === 'dark';
+
   return (
-    <div className="flex flex-col h-full bg-[#0d0f14] border border-white/8 rounded-2xl p-4 shadow-xl overflow-hidden">
+    <div className={`flex flex-col h-full rounded-2xl border p-4 shadow-sm transition-colors overflow-hidden ${
+      isDark
+        ? 'bg-[#0d0f14] border-white/8 text-white'
+        : 'bg-white border-black/8 text-[#1d1d1f]'
+    }`}>
       {/* Header */}
-      <div className="pb-3 border-b border-white/6 flex items-center justify-between flex-shrink-0">
+      <div className={`pb-3 border-b flex items-center justify-between flex-shrink-0 ${
+        isDark ? 'border-white/6' : 'border-black/6'
+      }`}>
         <div>
-          <h2 className="text-xs font-semibold uppercase tracking-wider text-slate-300">
+          <h2 className={`text-xs font-semibold uppercase tracking-wider ${
+            isDark ? 'text-slate-300' : 'text-[#1d1d1f]'
+          }`}>
             Curated Scenarios
           </h2>
-          <p className="text-[11px] text-slate-400 mt-0.5">
+          <p className={`text-[11px] mt-0.5 ${
+            isDark ? 'text-slate-400' : 'text-[#86868b]'
+          }`}>
             1-Click Multi-Agent Benchmarks
           </p>
         </div>
-        <span className="text-[10px] font-mono text-slate-400 bg-white/4 px-2 py-0.5 rounded border border-white/6">
+        <span className={`text-[10px] font-mono px-2 py-0.5 rounded border ${
+          isDark
+            ? 'text-slate-400 bg-white/4 border-white/6'
+            : 'text-[#6e6e73] bg-[#f5f5f7] border-black/6 font-medium'
+        }`}>
           6 Presets
         </span>
       </div>
@@ -108,23 +129,45 @@ export const DemoButtons: React.FC<DemoButtonsProps> = ({ onSelectScenario, disa
               key={sc.id}
               onClick={() => onSelectScenario(sc.prompt)}
               disabled={disabled}
-              className="w-full text-left p-3 rounded-xl bg-[#12151c] hover:bg-[#161a24] active:bg-[#1a1f2c] border border-white/4 hover:border-white/10 disabled:opacity-40 transition-all group relative overflow-hidden"
+              className={`w-full text-left p-3 rounded-xl border disabled:opacity-40 transition-all group relative overflow-hidden shadow-xs ${
+                isDark
+                  ? 'bg-[#12151c] hover:bg-[#161a24] active:bg-[#1a1f2c] border-white/4 hover:border-white/10'
+                  : 'bg-[#fbfbfd] hover:bg-[#f5f5f7] active:bg-[#e5e5ea] border-black/6 hover:border-black/14'
+              }`}
             >
               <div className="flex items-start justify-between mb-1">
                 <div className="flex items-center gap-2">
-                  <span className="text-[10px] font-mono text-slate-400 group-hover:text-blue-400 transition-colors">
+                  <span className={`text-[10px] font-mono transition-colors ${
+                    isDark
+                      ? 'text-slate-400 group-hover:text-blue-400'
+                      : 'text-[#86868b] group-hover:text-[#0071e3]'
+                  }`}>
                     {sc.num}
                   </span>
-                  <h3 className="text-xs font-medium text-slate-200 group-hover:text-white transition-colors">
+                  <h3 className={`text-xs font-semibold transition-colors ${
+                    isDark
+                      ? 'text-slate-200 group-hover:text-white'
+                      : 'text-[#1d1d1f] group-hover:text-[#0071e3]'
+                  }`}>
                     {sc.title}
                   </h3>
                 </div>
-                <Icon className="w-3.5 h-3.5 text-slate-400 group-hover:text-slate-300 transition-colors" />
+                <Icon className={`w-3.5 h-3.5 transition-colors ${
+                  isDark
+                    ? 'text-slate-400 group-hover:text-slate-300'
+                    : 'text-[#86868b] group-hover:text-[#1d1d1f]'
+                }`} />
               </div>
 
-              <div className="flex items-center justify-between text-[10px] text-slate-400 mt-1 font-mono">
-                <span className="text-slate-400">{sc.category}</span>
-                <span className="text-blue-400/80 group-hover:text-blue-300 flex items-center gap-0.5">
+              <div className="flex items-center justify-between text-[10px] mt-1 font-mono">
+                <span className={isDark ? 'text-slate-400' : 'text-[#86868b]'}>
+                  {sc.category}
+                </span>
+                <span className={`flex items-center gap-0.5 font-medium ${
+                  isDark
+                    ? 'text-blue-400/80 group-hover:text-blue-300'
+                    : 'text-[#0071e3] group-hover:text-[#0077ed]'
+                }`}>
                   Run <ArrowRight className="w-2.5 h-2.5 inline" />
                 </span>
               </div>
@@ -134,7 +177,9 @@ export const DemoButtons: React.FC<DemoButtonsProps> = ({ onSelectScenario, disa
       </div>
 
       {/* Footer Info */}
-      <div className="pt-3 border-t border-white/6 text-[10px] text-slate-400 flex-shrink-0 font-mono">
+      <div className={`pt-3 border-t text-[10px] flex-shrink-0 font-mono ${
+        isDark ? 'border-white/6 text-slate-400' : 'border-black/6 text-[#86868b]'
+      }`}>
         <span>Runs full 4-agent state pipeline &bull; CUDA RoBERTa</span>
       </div>
     </div>
