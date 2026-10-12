@@ -198,3 +198,8 @@ def mask_text(text: str, session_id: str) -> PrivacyOutput:
         detector_confidence=round(min_confidence if reverse_spans else 1.0, 3),
         warnings=warnings,
     )
+
+
+# Alias for convenience
+mask_pii = mask_text
+

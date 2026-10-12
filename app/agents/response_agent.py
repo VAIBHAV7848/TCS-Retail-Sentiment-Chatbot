@@ -108,9 +108,22 @@ async def generate_response(input: ResponseInput) -> ResponseOutput:
     if recent_turns:
         context_str = "\nConversation History:\n" + "\n".join(f"- {turn}" for turn in recent_turns[-3:])
 
+    # Optional RAG evidence (fail-open: empty list keeps legacy behavior).
+    evidence = list(getattr(input, "evidence", None) or [])
+    evidence_str = ""
+    if evidence:
+        lines = []
+        for ev in evidence[:3]:
+            src = str(ev.get("source_id", "policy"))
+            title = str(ev.get("title", src))
+            snippet = str(ev.get("snippet", ""))[:280]
+            lines.append(f"- [{src}] {title}: {snippet}")
+        evidence_str = "\nPolicy Evidence (ground your answer in these; cite source IDs):\n" + "\n".join(lines) + "\n"
+
     user_prompt = (
         f"Customer Message:\n\"{masked_text}\"\n"
-        f"{context_str}\n\n"
+        f"{context_str}\n"
+        f"{evidence_str}\n"
         f"Sentiment Analysis:\n"
         f"- Polarity: {sentiment.polarity.value}\n"
         f"- Emotion: {sentiment.emotion}\n"
@@ -158,6 +171,16 @@ async def generate_response(input: ResponseInput) -> ResponseOutput:
     cleaned_reply, scan_warnings = scan_output(raw_reply)
     if scan_warnings:
         logger.warning("outbound_reply_redacted_pii", warnings=scan_warnings)
+
+    # Ground citations in retrieved evidence (merge, dedup, cap at 3).
+    if evidence:
+        grounded = [str(ev.get("source_id", "")).strip() for ev in evidence[:3]]
+        grounded = [g for g in grounded if g]
+        merged: list[str] = []
+        for c in [*grounded, *(citations or [])]:
+            if c not in merged:
+                merged.append(c)
+        citations = merged[:3]
 
     return ResponseOutput(
         reply=cleaned_reply,

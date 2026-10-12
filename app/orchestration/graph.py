@@ -139,6 +139,18 @@ async def run_pipeline(
     # 6. Determine Route
     state.route = determine_route(state)
 
+    # 6b. Optional RAG: retrieve policy evidence on masked_text only (fail-open).
+    rag_evidence: list[dict] = []
+    try:
+        from app.retrieval.service import retrieve_evidence
+
+        rag_evidence = retrieve_evidence(state.masked_text) or []
+        if rag_evidence:
+            state.metrics["rag_hits"] = len(rag_evidence)
+    except Exception as e:
+        logger.warning("pipeline_rag_error_fail_open", request_id=request_id, error=str(e))
+        rag_evidence = []
+
     # 7. Run Response Agent
     if state.sentiment is not None:
         try:
@@ -146,6 +158,7 @@ async def run_pipeline(
                 masked_text=state.masked_text,
                 sentiment=state.sentiment,
                 recent_turns=recent_turns,
+                evidence=rag_evidence,
             )
             response_output = await generate_response(response_input)
 
