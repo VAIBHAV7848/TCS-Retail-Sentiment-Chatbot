@@ -17,7 +17,7 @@ The system runs **100% locally out-of-the-box** using Ollama (`llama3.2:3b`), lo
 </p>
 
 <p align="center">
-  <em>▶ <strong>Watch the full 1080p launch video with audio (35s):</strong> <a href="https://github.com/VAIBHAV7848/TCS-Retail-Sentiment-Chatbot/raw/main/docs/assets/brag.mp4"><code>docs/assets/brag.mp4</code></a></em>
+  <em>▶ <strong>Watch the full 1080p launch video with audio (42s):</strong> <a href="https://github.com/VAIBHAV7848/TCS-Retail-Sentiment-Chatbot/raw/main/docs/assets/brag.mp4"><code>docs/assets/brag.mp4</code></a></em>
 </p>
 
 ---
