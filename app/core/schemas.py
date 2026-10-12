@@ -192,6 +192,7 @@ class ChatResponse(BaseModel):
     handoff_package: Optional[HandoffPackage] = None
     privacy_warning: Optional[str] = None
     pii_entities_found: dict[str, int] = Field(default_factory=dict)
+    citations: list[str] = Field(default_factory=list)
 
 
 class HealthResponse(BaseModel):
@@ -218,3 +219,51 @@ class CaseView(BaseModel):
     summary: str
     signals: list[str] = Field(default_factory=list)
     created_at: str
+
+
+# ── Human Agent Live Handoff Schemas ──────────────────────────────────────────
+
+class HumanHandoffRequest(BaseModel):
+    session_id: str
+    customer_id: Optional[str] = "cust_vip"
+    reason: Optional[str] = "Customer opted out of AI chatbot to speak with a real human specialist"
+
+
+class HumanHandoffResponse(BaseModel):
+    status: str = "connected"
+    session_id: str
+    case_id: str
+    agent_name: str = "Sarah Jenkins"
+    agent_title: str = "Senior Retail Specialist"
+    handoff_message: str
+
+
+class HumanMessageRequest(BaseModel):
+    session_id: str
+    sender: str = "customer"  # "customer" or "human_agent"
+    message: str = Field(..., min_length=1, max_length=2000)
+    agent_name: Optional[str] = "Sarah Jenkins"
+
+
+class HumanMessageResponse(BaseModel):
+    session_id: str
+    sender: str
+    text: str
+    is_bot: bool
+    is_human: bool
+    agent_name: Optional[str] = None
+    timestamp: str
+    sentiment: Optional[SentimentOutput] = None
+
+
+class SessionMessageItem(BaseModel):
+    id: int
+    session_id: str
+    turn_number: int
+    text: str
+    is_bot: bool
+    is_human: bool = False
+    agent_name: Optional[str] = None
+    sentiment: Optional[dict] = None
+    avatar: Optional[dict] = None
+    timestamp: str

@@ -184,6 +184,20 @@ class SessionRepo:
             return await _get(s)
 
     @staticmethod
+    async def list_recent(
+        limit: int = 20, session: Optional[AsyncSession] = None
+    ) -> List[SessionModel]:
+        async def _list(s: AsyncSession) -> List[SessionModel]:
+            stmt = select(SessionModel).order_by(SessionModel.created_at.desc()).limit(limit)
+            res = await s.execute(stmt)
+            return list(res.scalars().all())
+
+        if session is not None:
+            return await _list(session)
+        async with get_app_session() as s:
+            return await _list(s)
+
+    @staticmethod
     async def delete(
         session_id: str, session: Optional[AsyncSession] = None
     ) -> bool:
