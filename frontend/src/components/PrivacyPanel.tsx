@@ -61,13 +61,13 @@ export const PrivacyPanel: React.FC<PrivacyPanelProps> = ({
   const isDark = theme === 'dark';
 
   return (
-    <div className={`flex flex-col h-full rounded-2xl border p-5 shadow-sm transition-colors relative overflow-hidden ${
+    <div className={`flex flex-col h-full rounded-2xl border p-4 shadow-sm transition-colors relative overflow-hidden ${
       isDark
         ? 'bg-[#0d0f14] border-white/8 text-white'
         : 'bg-white border-black/8 text-[#1d1d1f]'
     }`}>
       {/* Header bar */}
-      <div className={`flex items-center justify-between pb-3.5 border-b flex-shrink-0 ${
+      <div className={`flex items-center justify-between pb-3 border-b flex-shrink-0 ${
         isDark ? 'border-white/6' : 'border-black/6'
       }`}>
         <div className="flex items-center gap-2">
@@ -176,10 +176,52 @@ export const PrivacyPanel: React.FC<PrivacyPanelProps> = ({
           <div className={`flex-1 overflow-y-auto text-xs font-mono leading-relaxed break-words whitespace-pre-wrap ${
             isDark ? 'text-slate-300' : 'text-[#881337]'
           }`}>
-            {originalText || (
-              <span className={`italic ${isDark ? 'text-slate-400' : 'text-rose-400'}`}>
-                No incoming message in current buffer. Send a message to inspect masking.
-              </span>
+            {originalText ? (
+              originalText
+            ) : (
+              <div className="space-y-2">
+                <span className={`block text-[11px] ${isDark ? 'text-slate-400' : 'text-rose-500'}`}>
+                  No active turn in buffer. Test quick PII presets:
+                </span>
+                <div className="flex flex-wrap gap-1">
+                  <button
+                    onClick={() => {
+                      const text = "Aadhaar: 4832 9812 5467, Phone: 9845012345";
+                      setSandboxInput(text);
+                      runPreview(text);
+                    }}
+                    className={`text-[10px] px-2 py-0.5 rounded border transition-colors ${
+                      isDark ? 'bg-white/5 border-white/8 hover:bg-white/10 text-rose-300' : 'bg-white border-rose-200 hover:bg-rose-100 text-rose-700'
+                    }`}
+                  >
+                    + Aadhaar & Phone
+                  </button>
+                  <button
+                    onClick={() => {
+                      const text = "Visa: 4532 1111 2222 3333, Order: #ORD-9912";
+                      setSandboxInput(text);
+                      runPreview(text);
+                    }}
+                    className={`text-[10px] px-2 py-0.5 rounded border transition-colors ${
+                      isDark ? 'bg-white/5 border-white/8 hover:bg-white/10 text-rose-300' : 'bg-white border-rose-200 hover:bg-rose-100 text-rose-700'
+                    }`}
+                  >
+                    + Card & Order ID
+                  </button>
+                  <button
+                    onClick={() => {
+                      const text = "PAN: ABCDE1234F, UPI: priya@okhdfcbank";
+                      setSandboxInput(text);
+                      runPreview(text);
+                    }}
+                    className={`text-[10px] px-2 py-0.5 rounded border transition-colors ${
+                      isDark ? 'bg-white/5 border-white/8 hover:bg-white/10 text-rose-300' : 'bg-white border-rose-200 hover:bg-rose-100 text-rose-700'
+                    }`}
+                  >
+                    + PAN & UPI VPA
+                  </button>
+                </div>
+              </div>
             )}
           </div>
         </div>
@@ -205,10 +247,18 @@ export const PrivacyPanel: React.FC<PrivacyPanelProps> = ({
           <div className={`flex-1 overflow-y-auto text-xs font-mono leading-relaxed break-words whitespace-pre-wrap ${
             isDark ? 'text-sky-200' : 'text-[#0369a1]'
           }`}>
-            {maskedText || (
-              <span className={`italic ${isDark ? 'text-slate-400' : 'text-sky-400'}`}>
-                Masked tokens stream will appear here.
-              </span>
+            {maskedText ? (
+              maskedText
+            ) : (
+              <div className="space-y-1.5 text-[11px] opacity-80">
+                <p>Presidio Indian Entity Recognizers Active:</p>
+                <div className="flex flex-wrap gap-1 text-[9px]">
+                  <span className="px-1.5 py-0.5 rounded bg-sky-500/10 border border-sky-500/20 text-sky-600">[CARD] Luhn Verified</span>
+                  <span className="px-1.5 py-0.5 rounded bg-sky-500/10 border border-sky-500/20 text-sky-600">[AADHAAR] Verhoeff</span>
+                  <span className="px-1.5 py-0.5 rounded bg-sky-500/10 border border-sky-500/20 text-sky-600">[PAN] ITD Validated</span>
+                  <span className="px-1.5 py-0.5 rounded bg-sky-500/10 border border-sky-500/20 text-sky-600">[UPI] VPA Regex</span>
+                </div>
+              </div>
             )}
           </div>
         </div>

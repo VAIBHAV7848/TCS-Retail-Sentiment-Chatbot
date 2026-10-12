@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import type { AvatarDirective, SentimentData } from '../types';
-import { Volume2, VolumeX, ShieldCheck, Sparkles, Activity } from 'lucide-react';
+import { Volume2, VolumeX, ShieldCheck, Sparkles } from 'lucide-react';
 import { RealtimeAvatar, PortraitAvatar } from 'react-ai-avatar';
 import 'react-ai-avatar/style.css';
 
@@ -304,13 +304,13 @@ export const AvatarPanel: React.FC<AvatarPanelProps> = ({
   const isDark = theme === 'dark';
 
   return (
-    <div className={`flex flex-col h-full rounded-2xl border p-5 overflow-hidden transition-colors relative ${
+    <div className={`flex flex-col h-full rounded-2xl border p-4 overflow-hidden transition-colors relative ${
       isDark
         ? 'bg-[#0d0f14] border-white/8 shadow-xl text-white'
         : 'bg-white border-black/8 shadow-sm text-[#1d1d1f]'
     }`}>
       {/* Header with Segmented Avatar Selector */}
-      <div className={`flex items-center justify-between pb-3.5 border-b flex-shrink-0 ${
+      <div className={`flex items-center justify-between pb-3 border-b flex-shrink-0 ${
         isDark ? 'border-white/6' : 'border-black/6'
       }`}>
         <div className="flex items-center gap-2">
@@ -377,34 +377,34 @@ export const AvatarPanel: React.FC<AvatarPanelProps> = ({
         </div>
       </div>
 
-      {/* Main Avatar Canvas Area */}
-      <div className="flex-1 flex flex-col items-center justify-center py-3 relative min-h-[220px]">
+      {/* Main Avatar Canvas Area - Prominently Displayed & Centered */}
+      <div className="flex flex-col items-center justify-center py-2 relative flex-shrink-0">
         {avatarMode === 'portrait' ? (
           /* Mode 1: Top-Notch PortraitAvatar inside RealtimeAvatar with BYOS variant + AnalyserNode */
           <div className="flex flex-col items-center justify-center w-full relative">
             {/* Ambient Backlight Glow */}
             <div
-              className={`absolute w-56 h-56 rounded-full blur-3xl pointer-events-none transition-all duration-700 ${
+              className={`absolute w-48 h-48 rounded-full blur-2xl pointer-events-none transition-all duration-700 ${
                 isDark
                   ? isSpeaking
-                    ? 'bg-indigo-500/25 scale-110'
+                    ? 'bg-indigo-500/30 scale-110'
                     : loading
-                    ? 'bg-amber-500/20 scale-100'
-                    : 'bg-blue-600/20'
+                    ? 'bg-amber-500/25 scale-100'
+                    : 'bg-blue-600/25'
                   : isSpeaking
-                  ? 'bg-blue-400/20 scale-110'
+                  ? 'bg-blue-400/25 scale-110'
                   : loading
-                  ? 'bg-amber-300/25 scale-100'
-                  : 'bg-slate-200/50'
+                  ? 'bg-amber-300/30 scale-100'
+                  : 'bg-slate-200/60'
               }`}
             />
 
-            <div className="w-52 h-52 flex items-center justify-center relative">
+            <div className="w-48 h-48 flex items-center justify-center relative">
               <RealtimeAvatar
                 state={aiAvatarState}
                 analyser={analyser}
                 variant="byos"
-                size={200}
+                size={185}
                 thought={loading ? 'Synthesizing empathetic resolution...' : undefined}
                 thinkingEmojis={loading ? ['🤔', '🔍', '💡', '✨'] : undefined}
                 thinkingEmojiInterval={800}
@@ -413,26 +413,6 @@ export const AvatarPanel: React.FC<AvatarPanelProps> = ({
               >
                 <PortraitAvatar state={aiAvatarState} poses={true} />
               </RealtimeAvatar>
-            </div>
-
-            {/* Live State & Pose Indicator */}
-            <div className={`mt-2.5 flex items-center gap-2 px-3 py-1 rounded-full border shadow-xs ${
-              isDark
-                ? 'bg-white/4 border-white/8 text-slate-300'
-                : 'bg-[#f5f5f7] border-black/6 text-[#48484a]'
-            }`}>
-              <span
-                className={`w-1.5 h-1.5 rounded-full ${
-                  isSpeaking ? 'bg-emerald-500 animate-ping' : loading ? 'bg-amber-500 animate-pulse' : 'bg-blue-500'
-                }`}
-              />
-              <span className="text-[11px] font-medium">
-                {isSpeaking
-                  ? 'Speaking (PCM Reactive Lip-Sync)'
-                  : loading
-                  ? 'Reasoning (Local llama3.2:3b GPU)'
-                  : 'Listening & Attentive'}
-              </span>
             </div>
           </div>
         ) : avatarMode === 'adaptive_vector' ? (
@@ -560,90 +540,151 @@ export const AvatarPanel: React.FC<AvatarPanelProps> = ({
         )}
       </div>
 
-      {/* Audio Wave & WebAudio Analyser Status Bar */}
-      <div className={`pt-3 border-t flex items-center justify-between text-xs flex-shrink-0 transition-colors ${
+      {/* Audio Wave & WebAudio Analyser Control Strip */}
+      <div className={`mt-2.5 pt-2.5 border-t flex items-center justify-between text-xs flex-shrink-0 transition-colors ${
         isDark ? 'border-white/6 text-slate-300' : 'border-black/6 text-[#48484a]'
       }`}>
-        <div className="flex items-center gap-3">
-          <button
-            onClick={() => {
-              getOrCreateAnalyser();
-              setTtsEnabled(!ttsEnabled);
-            }}
-            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-medium transition-all ${
-              ttsEnabled
-                ? 'bg-blue-50 text-blue-600 border border-blue-200 shadow-xs'
-                : isDark
-                ? 'bg-white/4 text-slate-400 border border-white/6 hover:text-slate-200'
-                : 'bg-[#f5f5f7] text-[#86868b] border border-black/6 hover:text-[#1d1d1f]'
-            }`}
-            title="Toggle text-to-speech audio voice output"
-          >
-            {ttsEnabled ? <Volume2 className="w-3.5 h-3.5 text-blue-600" /> : <VolumeX className="w-3.5 h-3.5" />}
-            <span>{ttsEnabled ? 'Voice Active' : 'Voice Muted'}</span>
-          </button>
+        <button
+          onClick={() => {
+            getOrCreateAnalyser();
+            setTtsEnabled(!ttsEnabled);
+          }}
+          className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-medium transition-all ${
+            ttsEnabled
+              ? 'bg-blue-50 text-blue-600 border border-blue-200 shadow-xs'
+              : isDark
+              ? 'bg-white/4 text-slate-400 border border-white/6 hover:text-slate-200'
+              : 'bg-[#f5f5f7] text-[#86868b] border border-black/6 hover:text-[#1d1d1f]'
+          }`}
+          title="Toggle text-to-speech audio voice output"
+        >
+          {ttsEnabled ? <Volume2 className="w-3.5 h-3.5 text-blue-600" /> : <VolumeX className="w-3.5 h-3.5" />}
+          <span>{ttsEnabled ? 'Voice Active' : 'Voice Muted'}</span>
+        </button>
 
-          {/* Real-time PCM spectrum animation */}
-          {isSpeaking && (
-            <div className="flex items-center gap-1 h-3.5 px-2 py-0.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-[10px] text-blue-600 font-mono">
-              <Activity className="w-3 h-3 text-blue-500 animate-pulse" />
-              <span>{audioLevel > 0 ? `${audioLevel}% PCM` : 'Active'}</span>
-            </div>
-          )}
-        </div>
-
-        <div className={`flex items-center gap-1.5 text-[11px] font-mono ${
-          isDark ? 'text-slate-400' : 'text-[#86868b]'
+        {/* Real-time Spectrum Waveform Indicator */}
+        <div className={`flex items-center gap-1 px-2.5 py-1 rounded-full border shadow-xs ${
+          isDark ? 'bg-white/4 border-white/8 text-slate-300' : 'bg-[#f5f5f7] border-black/6 text-[#48484a]'
         }`}>
-          <span>Tempo: {directive.speech_rate || 1.0}x</span>
+          {[...Array(8)].map((_, i) => (
+            <span
+              key={i}
+              className={`w-1 rounded-full transition-all duration-150 ${
+                isSpeaking
+                  ? 'bg-emerald-500 animate-pulse'
+                  : loading
+                  ? 'bg-amber-500'
+                  : 'bg-indigo-400 opacity-60'
+              }`}
+              style={{
+                height: isSpeaking
+                  ? `${Math.max(4, Math.sin(i * 0.9 + (audioLevel || 20)) * 10 + 4)}px`
+                  : loading
+                  ? `${(i % 3 + 1) * 3}px`
+                  : `${(i % 2 + 1) * 2.5}px`,
+              }}
+            />
+          ))}
+          <span className="text-[10px] font-mono ml-1 font-medium">
+            {isSpeaking
+              ? (audioLevel > 0 ? `${audioLevel}% PCM` : 'Lip-Sync')
+              : loading
+              ? 'Reasoning'
+              : 'Listening'}
+          </span>
         </div>
+
+        <span className={`text-[10px] font-mono ${isDark ? 'text-slate-400' : 'text-[#86868b]'}`}>
+          Tempo: {directive.speech_rate || 1.0}x
+        </span>
       </div>
 
-      {/* Telemetry Readout Grid */}
-      <div className={`mt-3 pt-3 border-t grid grid-cols-2 gap-2 text-[11px] flex-shrink-0 ${
-        isDark ? 'border-white/6' : 'border-black/6'
+      {/* Telemetry & Emotion Analysis HUD */}
+      <div className={`mt-2 p-2.5 rounded-xl border flex-shrink-0 transition-colors ${
+        isDark ? 'bg-[#121620] border-white/6' : 'bg-[#fbfbfd] border-black/6 shadow-xs'
       }`}>
-        <div className={`px-2.5 py-1.5 rounded-xl border transition-colors ${
-          isDark
-            ? 'bg-[#12151c] border-white/4 text-slate-400'
-            : 'bg-[#f5f5f7] border-black/6 text-[#48484a]'
-        }`}>
-          <span className={`text-[10px] uppercase tracking-wider block font-medium ${
-            isDark ? 'text-slate-400' : 'text-[#86868b]'
+        <div className="grid grid-cols-2 gap-2 pb-2 mb-2 border-b border-black/5 dark:border-white/5">
+          <div>
+            <span className={`text-[9px] uppercase tracking-wider block font-medium ${
+              isDark ? 'text-slate-400' : 'text-[#86868b]'
+            }`}>
+              Tone Profile
+            </span>
+            <span className={`text-[11px] font-semibold capitalize truncate block ${
+              isDark ? 'text-slate-200' : 'text-[#1d1d1f]'
+            }`}>
+              {directive.voice_tone ? directive.voice_tone.replace(/_/g, ' ') : 'Neutral Professional'}
+            </span>
+          </div>
+          <div>
+            <span className={`text-[9px] uppercase tracking-wider block font-medium ${
+              isDark ? 'text-slate-400' : 'text-[#86868b]'
+            }`}>
+              Emotion Signal
+            </span>
+            <span className={`text-[11px] font-semibold capitalize truncate block ${
+              isDark ? 'text-slate-200' : 'text-[#1d1d1f]'
+            }`}>
+              {sentiment?.emotion || 'Attentive'} ({sentiment ? Math.round(sentiment.confidence * 100) : 95}%)
+            </span>
+          </div>
+        </div>
+
+        <div className="flex items-center justify-between mb-1 text-[9px] font-mono font-medium uppercase">
+          <span className="opacity-70">RoBERTa Polarity Distribution</span>
+          <span className={`text-[10px] font-bold ${
+            sentiment?.polarity === 'positive'
+              ? 'text-emerald-500'
+              : sentiment?.polarity === 'negative'
+              ? 'text-rose-500'
+              : 'text-amber-500'
           }`}>
-            Tone Profile
-          </span>
-          <span className={`font-semibold capitalize truncate block ${
-            isDark ? 'text-slate-200' : 'text-[#1d1d1f]'
-          }`}>
-            {directive.voice_tone ? directive.voice_tone.replace(/_/g, ' ') : 'Neutral Professional'}
+            {sentiment?.polarity ? sentiment.polarity.toUpperCase() : 'NEUTRAL (90%)'}
           </span>
         </div>
 
-        <div className={`px-2.5 py-1.5 rounded-xl border transition-colors ${
-          isDark
-            ? 'bg-[#12151c] border-white/4 text-slate-400'
-            : 'bg-[#f5f5f7] border-black/6 text-[#48484a]'
-        }`}>
-          <span className={`text-[10px] uppercase tracking-wider block font-medium ${
-            isDark ? 'text-slate-400' : 'text-[#86868b]'
-          }`}>
-            Emotion Signal
+        {/* 3-Color Horizontal Progress Bar */}
+        <div className="h-1.5 w-full rounded-full overflow-hidden flex bg-black/10 dark:bg-white/10 mb-1.5">
+          <div
+            className="bg-emerald-500 transition-all duration-500"
+            style={{ width: `${Math.round((sentiment?.polarity_scores?.positive || 0.1) * 100)}%` }}
+            title={`Positive: ${Math.round((sentiment?.polarity_scores?.positive || 0.1) * 100)}%`}
+          />
+          <div
+            className="bg-amber-400 transition-all duration-500"
+            style={{ width: `${Math.round((sentiment?.polarity_scores?.neutral || 0.8) * 100)}%` }}
+            title={`Neutral: ${Math.round((sentiment?.polarity_scores?.neutral || 0.8) * 100)}%`}
+          />
+          <div
+            className="bg-rose-500 transition-all duration-500"
+            style={{ width: `${Math.round((sentiment?.polarity_scores?.negative || 0.1) * 100)}%` }}
+            title={`Negative: ${Math.round((sentiment?.polarity_scores?.negative || 0.1) * 100)}%`}
+          />
+        </div>
+
+        {/* Polarity legend */}
+        <div className="flex items-center justify-between text-[9px] font-mono opacity-75">
+          <span className="flex items-center gap-1">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+            Pos {Math.round((sentiment?.polarity_scores?.positive || 0.1) * 100)}%
           </span>
-          <span className={`font-semibold capitalize truncate block ${
-            isDark ? 'text-slate-200' : 'text-[#1d1d1f]'
-          }`}>
-            {sentiment?.emotion || 'Attentive'} ({sentiment ? Math.round(sentiment.confidence * 100) : 95}%)
+          <span className="flex items-center gap-1">
+            <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
+            Neu {Math.round((sentiment?.polarity_scores?.neutral || 0.8) * 100)}%
+          </span>
+          <span className="flex items-center gap-1">
+            <span className="w-1.5 h-1.5 rounded-full bg-rose-500" />
+            Neg {Math.round((sentiment?.polarity_scores?.negative || 0.1) * 100)}%
           </span>
         </div>
       </div>
 
-      {/* Safety Policy Label */}
-      <div className={`mt-2.5 flex items-center gap-1.5 text-[10px] flex-shrink-0 ${
+      {/* Safety Policy Guard */}
+      <div className={`mt-2 flex items-center gap-1.5 text-[10px] flex-shrink-0 ${
         isDark ? 'text-slate-400' : 'text-[#86868b]'
       }`}>
         <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 flex-shrink-0" />
-        <span className="truncate">Affect Guard: Cheerful affect restricted during escalation</span>
+        <span className="truncate">Affect Guard: Empathy-gated during customer escalation</span>
       </div>
     </div>
   );

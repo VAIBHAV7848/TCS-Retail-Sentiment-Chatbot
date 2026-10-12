@@ -6,7 +6,9 @@ import type {
   HealthData,
 } from './types';
 
-const API_BASE = 'http://localhost:8000';
+const API_BASE = (
+  import.meta.env.VITE_API_URL as string | undefined
+)?.replace(/\/$/, '') || 'http://localhost:8000';
 
 export async function sendMessage(message: string, sessionId?: string): Promise<ChatResponse> {
   const res = await fetch(`${API_BASE}/chat`, {
@@ -64,3 +66,59 @@ export async function getHealth(): Promise<HealthData> {
   }
   return res.json();
 }
+
+export async function requestHumanHandoff(sessionId?: string, reason?: string) {
+  const res = await fetch(`${API_BASE}/chat/human/handoff`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      session_id: sessionId || `session-${Date.now()}`,
+      reason: reason || 'Customer requested live representative',
+    }),
+  });
+  if (!res.ok) {
+    const errorText = await res.text();
+    throw new Error(`Failed to request human handoff (${res.status}): ${errorText}`);
+  }
+  return res.json();
+}
+
+export async function sendHumanMessage(
+  sessionId: string,
+  sender: 'customer' | 'human_agent',
+  message: string,
+  agentName?: string
+) {
+  const res = await fetch(`${API_BASE}/chat/human/send`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      session_id: sessionId,
+      sender,
+      message,
+      agent_name: agentName || 'Sarah Jenkins',
+    }),
+  });
+  if (!res.ok) {
+    const errorText = await res.text();
+    throw new Error(`Failed to send message (${res.status}): ${errorText}`);
+  }
+  return res.json();
+}
+
+export async function getSessionMessages(sessionId: string) {
+  const res = await fetch(`${API_BASE}/chat/sessions/${sessionId}/messages`);
+  if (!res.ok) {
+    throw new Error(`Failed to fetch session messages (${res.status})`);
+  }
+  return res.json();
+}
+
+export async function getActiveHumanSessions() {
+  const res = await fetch(`${API_BASE}/chat/human/active-sessions`);
+  if (!res.ok) {
+    throw new Error(`Failed to fetch active human sessions (${res.status})`);
+  }
+  return res.json();
+}
+

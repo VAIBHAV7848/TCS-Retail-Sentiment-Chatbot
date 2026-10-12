@@ -56,6 +56,7 @@ export interface ChatResponse {
   avatar?: AvatarDirective;
   privacy_warning?: boolean;
   pii_entities_found?: PiiEntity[] | string[];
+  citations?: string[];
   created_at?: string;
 }
 
@@ -113,6 +114,8 @@ export interface MessageItem {
   sender: 'user' | 'bot';
   text: string;
   timestamp: string;
+  isHuman?: boolean;
+  agentName?: string;
   sentiment?: SentimentData;
   escalation?: EscalationDecision;
   avatar?: AvatarDirective;
@@ -123,3 +126,48 @@ export interface MessageItem {
     citations?: string[];
   };
 }
+
+export interface HumanHandoffResponse {
+  status: string;
+  session_id: string;
+  case_id: string;
+  agent_name: string;
+  agent_title: string;
+  handoff_message: string;
+}
+
+export interface HumanMessageResponse {
+  session_id: string;
+  sender: string;
+  text: string;
+  is_bot: boolean;
+  is_human: boolean;
+  agent_name?: string;
+  timestamp: string;
+  sentiment?: SentimentData;
+}
+
+export interface SessionMessageItem {
+  id: number;
+  session_id: string;
+  turn_number: number;
+  text: string;
+  is_bot: boolean;
+  is_human: boolean;
+  agent_name?: string;
+  sentiment?: SentimentData;
+  avatar?: AvatarDirective;
+  timestamp: string;
+}
+
+export interface ActiveHumanSession {
+  case_id: string;
+  session_id: string;
+  priority: string;
+  reason: string;
+  summary?: string;
+  created_at: string;
+  latest_message?: string;
+  latest_sentiment?: SentimentData;
+}
+

@@ -7,6 +7,11 @@ import {
   AlertTriangle,
   Lock,
   MessageSquareQuote,
+  Headphones,
+  UserCheck,
+  Cpu,
+  Shield,
+  Activity,
 } from 'lucide-react';
 
 interface DemoScenario {
@@ -74,54 +79,141 @@ const DEMO_SCENARIOS: DemoScenario[] = [
     icon: MessageSquareQuote,
     prompt: 'Great, another delay. Exactly what I needed. Your delivery service is just wonderful.',
   },
+  {
+    id: 'human_optout',
+    num: '07',
+    title: 'Speak to Real Human',
+    category: 'AI Opt-Out & Specialist',
+    expectedTone: 'Direct Specialist Handoff',
+    icon: Headphones,
+    prompt: 'I do not want to talk with an AI chatbot at all. Please connect me immediately to a real human representative.',
+  },
 ];
 
 interface DemoButtonsProps {
   onSelectScenario: (prompt: string) => void;
+  onConnectHuman?: () => void;
+  isHumanActive?: boolean;
   disabled?: boolean;
   theme?: 'light' | 'dark';
 }
 
 export const DemoButtons: React.FC<DemoButtonsProps> = ({
   onSelectScenario,
+  onConnectHuman,
+  isHumanActive = false,
   disabled,
   theme = 'light',
 }) => {
   const isDark = theme === 'dark';
 
   return (
-    <div className={`flex flex-col h-full rounded-2xl border p-4 shadow-sm transition-colors overflow-hidden ${
+    <div className={`flex flex-col h-full rounded-2xl border p-3.5 shadow-sm transition-colors overflow-hidden ${
       isDark
-        ? 'bg-[#0d0f14] border-white/8 text-white'
+        ? 'bg-[#0b0d12] border-white/8 text-white'
         : 'bg-white border-black/8 text-[#1d1d1f]'
     }`}>
       {/* Header */}
-      <div className={`pb-3 border-b flex items-center justify-between flex-shrink-0 ${
+      <div className={`pb-2.5 border-b flex items-center justify-between flex-shrink-0 ${
         isDark ? 'border-white/6' : 'border-black/6'
       }`}>
         <div>
           <h2 className={`text-xs font-semibold uppercase tracking-wider ${
             isDark ? 'text-slate-300' : 'text-[#1d1d1f]'
           }`}>
-            Curated Scenarios
+            Command Dock
           </h2>
-          <p className={`text-[11px] mt-0.5 ${
+          <p className={`text-[10px] mt-0.5 ${
             isDark ? 'text-slate-400' : 'text-[#86868b]'
           }`}>
-            1-Click Multi-Agent Benchmarks
+            Multi-Agent Scenarios & Telemetry
           </p>
         </div>
-        <span className={`text-[10px] font-mono px-2 py-0.5 rounded border ${
-          isDark
-            ? 'text-slate-400 bg-white/4 border-white/6'
-            : 'text-[#6e6e73] bg-[#f5f5f7] border-black/6 font-medium'
+
+        <div className={`flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-mono border ${
+          isDark ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-300' : 'bg-emerald-50 border-emerald-200 text-emerald-800'
         }`}>
-          6 Presets
-        </span>
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+          <span>LOCAL GPU</span>
+        </div>
       </div>
 
-      {/* Scenarios List */}
-      <div className="flex-1 overflow-y-auto space-y-2 py-3 pr-0.5">
+      {/* Mini System Telemetry HUD */}
+      <div className={`my-2 p-2.5 rounded-xl border flex-shrink-0 text-[10px] font-mono transition-colors ${
+        isDark ? 'bg-[#121620] border-white/6' : 'bg-[#fbfbfd] border-black/6 shadow-xs'
+      }`}>
+        <div className="grid grid-cols-2 gap-2">
+          <div className="flex items-center gap-1.5">
+            <Cpu className="w-3 h-3 text-indigo-500 flex-shrink-0" />
+            <div className="truncate">
+              <span className="opacity-60 block text-[9px]">ENGINE</span>
+              <span className="font-semibold text-[10px]">llama3.2:3b</span>
+            </div>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <Shield className="w-3 h-3 text-emerald-500 flex-shrink-0" />
+            <div className="truncate">
+              <span className="opacity-60 block text-[9px]">PII VAULT</span>
+              <span className="font-semibold text-[10px]">AES-256 GCM</span>
+            </div>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <Activity className="w-3 h-3 text-amber-500 flex-shrink-0" />
+            <div className="truncate">
+              <span className="opacity-60 block text-[9px]">CLASSIFIER</span>
+              <span className="font-semibold text-[10px]">RoBERTa NLP</span>
+            </div>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 flex-shrink-0" />
+            <div className="truncate">
+              <span className="opacity-60 block text-[9px]">LATENCY</span>
+              <span className="font-semibold text-[10px]">~140ms (CUDA)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Human Specialist Direct Banner */}
+      {onConnectHuman && (
+        <div className="mb-2 flex-shrink-0">
+          <button
+            onClick={() => onConnectHuman()}
+            disabled={disabled || isHumanActive}
+            className={`w-full text-left p-2.5 rounded-xl border flex items-center justify-between transition-all ${
+              isHumanActive
+                ? isDark
+                  ? 'bg-emerald-500/10 border-emerald-500/25 text-emerald-300 opacity-90'
+                  : 'bg-emerald-50 border-emerald-200 text-emerald-800'
+                : isDark
+                ? 'bg-indigo-500/10 hover:bg-indigo-500/20 border-indigo-500/30 text-indigo-200'
+                : 'bg-indigo-50/70 hover:bg-indigo-100 border-indigo-200 text-[#4338ca] shadow-xs'
+            }`}
+          >
+            <div className="flex items-center gap-2">
+              <div className={`w-6 h-6 rounded-lg flex items-center justify-center ${
+                isHumanActive
+                  ? 'bg-emerald-500/20 text-emerald-400'
+                  : 'bg-indigo-500/20 text-indigo-400'
+              }`}>
+                {isHumanActive ? <UserCheck className="w-3.5 h-3.5" /> : <Headphones className="w-3.5 h-3.5" />}
+              </div>
+              <div>
+                <p className="text-xs font-semibold">
+                  {isHumanActive ? 'Live Human Desk Connected' : 'Talk with Real Human'}
+                </p>
+                <p className="text-[10px] opacity-75">
+                  {isHumanActive ? 'Senior Specialist Sarah Jenkins' : 'Skip AI & handover seamlessly'}
+                </p>
+              </div>
+            </div>
+            {!isHumanActive && <ArrowRight className="w-3.5 h-3.5 text-indigo-400" />}
+          </button>
+        </div>
+      )}
+
+      {/* Scenario List */}
+      <div className="flex-1 overflow-y-auto space-y-1.5 py-1 pr-1">
         {DEMO_SCENARIOS.map((sc) => {
           const Icon = sc.icon;
           return (
@@ -129,22 +221,22 @@ export const DemoButtons: React.FC<DemoButtonsProps> = ({
               key={sc.id}
               onClick={() => onSelectScenario(sc.prompt)}
               disabled={disabled}
-              className={`w-full text-left p-3 rounded-xl border disabled:opacity-40 transition-all group relative overflow-hidden shadow-xs ${
+              className={`w-full text-left p-2.5 rounded-xl border transition-all group disabled:opacity-50 disabled:cursor-not-allowed ${
                 isDark
-                  ? 'bg-[#12151c] hover:bg-[#161a24] active:bg-[#1a1f2c] border-white/4 hover:border-white/10'
-                  : 'bg-[#fbfbfd] hover:bg-[#f5f5f7] active:bg-[#e5e5ea] border-black/6 hover:border-black/14'
+                  ? 'bg-[#151922] hover:bg-[#1a2130] border-white/6 hover:border-white/12'
+                  : 'bg-[#fbfbfd] hover:bg-[#f5f5f7] border-black/6 hover:border-black/12 shadow-xs'
               }`}
             >
-              <div className="flex items-start justify-between mb-1">
-                <div className="flex items-center gap-2">
-                  <span className={`text-[10px] font-mono transition-colors ${
+              <div className="flex items-center justify-between mb-0.5">
+                <div className="flex items-center gap-1.5">
+                  <span className={`text-[9px] font-mono px-1 py-0.2 rounded border ${
                     isDark
-                      ? 'text-slate-400 group-hover:text-blue-400'
-                      : 'text-[#86868b] group-hover:text-[#0071e3]'
+                      ? 'bg-white/4 border-white/8 text-slate-400'
+                      : 'bg-black/4 border-black/8 text-[#86868b]'
                   }`}>
                     {sc.num}
                   </span>
-                  <h3 className={`text-xs font-semibold transition-colors ${
+                  <h3 className={`text-xs font-semibold tracking-tight transition-colors ${
                     isDark
                       ? 'text-slate-200 group-hover:text-white'
                       : 'text-[#1d1d1f] group-hover:text-[#0071e3]'
@@ -159,7 +251,7 @@ export const DemoButtons: React.FC<DemoButtonsProps> = ({
                 }`} />
               </div>
 
-              <div className="flex items-center justify-between text-[10px] mt-1 font-mono">
+              <div className="flex items-center justify-between text-[10px] font-mono">
                 <span className={isDark ? 'text-slate-400' : 'text-[#86868b]'}>
                   {sc.category}
                 </span>
@@ -177,10 +269,11 @@ export const DemoButtons: React.FC<DemoButtonsProps> = ({
       </div>
 
       {/* Footer Info */}
-      <div className={`pt-3 border-t text-[10px] flex-shrink-0 font-mono ${
+      <div className={`pt-2.5 border-t text-[10px] flex-shrink-0 font-mono flex items-center justify-between ${
         isDark ? 'border-white/6 text-slate-400' : 'border-black/6 text-[#86868b]'
       }`}>
-        <span>Runs full 4-agent state pipeline &bull; CUDA RoBERTa</span>
+        <span>4-Agent State Graph</span>
+        <span className="text-emerald-500 font-medium">● 0 Leaks</span>
       </div>
     </div>
   );
