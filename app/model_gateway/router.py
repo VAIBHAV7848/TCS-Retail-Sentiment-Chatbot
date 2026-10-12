@@ -9,7 +9,7 @@ import structlog
 
 from app.core.config import get_settings
 from app.model_gateway.fallback import get_fallback_json, get_fallback_response
-from app.model_gateway.providers import GroqProvider
+from app.model_gateway.providers import GroqProvider, OllamaProvider
 from app.model_gateway.schemas import LLMRequest, LLMResponse
 
 logger = structlog.get_logger(__name__)
@@ -18,16 +18,23 @@ settings = get_settings()
 
 async def call_llm(request: LLMRequest) -> LLMResponse:
     """
-    Route LLM request to GroqProvider.
-    On failure: retry once, then fall back to template-based responses.
+    Route LLM request to local OllamaProvider or cloud GroqProvider.
+    On failure: try fallback provider, then template-based responses.
     Logs model used, latency, and tokens.
     """
-    provider = GroqProvider()
     start_time = time.perf_counter()
 
-    # Try primary Groq call (GroqProvider already has internal retry for transient errors)
+    # Determine primary and secondary provider
+    if settings.llm_provider == "ollama":
+        primary = OllamaProvider()
+        secondary = GroqProvider() if settings.groq_api_key else None
+    else:
+        primary = GroqProvider() if settings.groq_api_key else OllamaProvider()
+        secondary = OllamaProvider() if settings.groq_api_key else None
+
+    # Try primary provider
     try:
-        response = await provider.generate(request)
+        response = await primary.generate(request)
         logger.info(
             "llm_call_success",
             task_type=request.task_type,
@@ -38,28 +45,29 @@ async def call_llm(request: LLMRequest) -> LLMResponse:
         return response
     except Exception as exc:
         logger.warning(
-            "llm_call_primary_failed_retrying",
+            "llm_call_primary_failed_trying_secondary",
             task_type=request.task_type,
             error=str(exc),
         )
 
-    # Second attempt
-    try:
-        response = await provider.generate(request)
-        logger.info(
-            "llm_call_retry_success",
-            task_type=request.task_type,
-            model=response.model_used,
-            latency_ms=response.latency_ms,
-            tokens=response.tokens_used,
-        )
-        return response
-    except Exception as exc:
-        logger.error(
-            "llm_call_failed_using_fallback",
-            task_type=request.task_type,
-            error=str(exc),
-        )
+    # Try secondary provider if available
+    if secondary is not None:
+        try:
+            response = await secondary.generate(request)
+            logger.info(
+                "llm_call_secondary_success",
+                task_type=request.task_type,
+                model=response.model_used,
+                latency_ms=response.latency_ms,
+                tokens=response.tokens_used,
+            )
+            return response
+        except Exception as exc:
+            logger.error(
+                "llm_call_secondary_failed_using_fallback",
+                task_type=request.task_type,
+                error=str(exc),
+            )
 
     # Fallback response
     elapsed_ms = (time.perf_counter() - start_time) * 1000.0

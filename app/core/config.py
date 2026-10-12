@@ -24,6 +24,9 @@ class Settings(BaseSettings):
     vault_encryption_key: str = ""
 
     # LLM providers
+    llm_provider: str = "ollama"  # "ollama" (100% local) or "groq"
+    ollama_base_url: str = "http://localhost:11434"
+    ollama_model: str = "llama3.2:3b"
     groq_api_key: str = ""
     gemini_api_key: str = ""
     openai_api_key: str = ""

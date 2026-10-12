@@ -12,11 +12,10 @@ import httpx
 import structlog
 
 from app.core.config import get_settings
+from app.model_gateway.router import call_llm
+from app.model_gateway.schemas import LLMRequest
 
 logger = structlog.get_logger(__name__)
-
-GROQ_ENDPOINT = "https://api.groq.com/openai/v1/chat/completions"
-GROQ_MODEL = "openai/gpt-oss-120b"
 
 
 def should_trigger_tier2(tier1_result: dict, recent_turns: Optional[List[str]] = None) -> bool:
@@ -70,12 +69,6 @@ async def llm_sentiment_review(
         polarity, polarity_scores, emotion, emotion_scores, intent, topic, reason, confidence
     Or None if the request fails or cannot be parsed.
     """
-    settings = get_settings()
-    api_key = settings.groq_api_key or os.getenv("GROQ_API_KEY", "")
-    if not api_key:
-        logger.warning("groq_api_key_missing_skipping_tier2")
-        return None
-
     system_prompt = (
         "You are an expert retail sentiment and customer psychology analyst. "
         "Analyze the customer's masked message carefully considering retail context. "
@@ -102,31 +95,26 @@ async def llm_sentiment_review(
         "Provide your nuanced sentiment evaluation in the specified JSON format."
     )
 
-    payload = {
-        "model": GROQ_MODEL,
-        "messages": [
-            {"role": "system", "content": system_prompt},
-            {"role": "user", "content": user_prompt},
-        ],
-        "response_format": {"type": "json_object"},
-        "temperature": 0.1,
-        "max_tokens": 1500,
-    }
-
-    headers = {
-        "Authorization": f"Bearer {api_key}",
-        "Content-Type": "application/json",
-    }
-
     try:
-        async with httpx.AsyncClient(timeout=10.0) as client:
-            response = await client.post(GROQ_ENDPOINT, json=payload, headers=headers)
-            response.raise_for_status()
-            data = response.json()
-            content = data["choices"][0]["message"]["content"]
-            result = json.loads(content)
-            logger.info("groq_tier2_review_success", polarity=result.get("polarity"), confidence=result.get("confidence"))
+        req = LLMRequest(
+            system_prompt=system_prompt,
+            user_prompt=user_prompt,
+            response_schema={"type": "json_object"},
+            temperature=0.1,
+            max_tokens=1500,
+            task_type="sentiment_review",
+        )
+        resp = await call_llm(req)
+        if resp and resp.parsed and resp.model_used != "fallback-template":
+            result = resp.parsed
+            logger.info(
+                "tier2_review_success",
+                model=resp.model_used,
+                polarity=result.get("polarity"),
+                confidence=result.get("confidence"),
+            )
             return result
+        return None
     except Exception as e:
-        logger.error("groq_tier2_review_failed", error=str(e))
+        logger.error("tier2_review_failed", error=str(e))
         return None

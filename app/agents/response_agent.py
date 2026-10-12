@@ -22,6 +22,8 @@ from app.core.schemas import (
     ResponseOutput,
     Urgency,
 )
+from app.model_gateway.router import call_llm
+from app.model_gateway.schemas import LLMRequest
 from app.privacy.output_scan import scan_output
 
 logger = structlog.get_logger(__name__)
@@ -117,46 +119,33 @@ async def generate_response(input: ResponseInput) -> ResponseOutput:
         "Generate a helpful, empathetic retail response adhering to all guidelines."
     )
 
-    settings = get_settings()
-    api_key = settings.groq_api_key or os.getenv("GROQ_API_KEY", "")
-
     raw_reply = ""
     next_steps: List[str] = []
     citations: List[str] = []
     confidence = 0.9
 
-    if api_key:
-        payload = {
-            "model": GROQ_MODEL,
-            "messages": [
-                {"role": "system", "content": system_prompt},
-                {"role": "user", "content": user_prompt},
-            ],
-            "response_format": {"type": "json_object"},
-            "temperature": 0.3,
-            "max_tokens": 1500,
-        }
-        headers = {
-            "Authorization": f"Bearer {api_key}",
-            "Content-Type": "application/json",
-        }
+    try:
+        llm_req = LLMRequest(
+            system_prompt=system_prompt,
+            user_prompt=user_prompt,
+            response_schema={"type": "json_object"},
+            temperature=0.3,
+            max_tokens=1500,
+            task_type="response_strong" if is_escalated else "response_fast",
+        )
+        llm_resp = await call_llm(llm_req)
 
-        try:
-            async with httpx.AsyncClient(timeout=12.0) as client:
-                res = await client.post(GROQ_ENDPOINT, json=payload, headers=headers)
-                res.raise_for_status()
-                data = res.json()
-                content = data["choices"][0]["message"]["content"]
-                parsed = json.loads(content)
-                raw_reply = parsed.get("reply", "")
-                next_steps = parsed.get("next_steps", [])
-                citations = parsed.get("citations", [])
-        except Exception as e:
-            logger.error("groq_response_generation_failed", error=str(e))
-            raw_reply, next_steps = _fallback_response(sentiment.polarity, is_escalated)
-            confidence = 0.5
-    else:
-        logger.warning("groq_api_key_not_set_using_fallback")
+        if llm_resp and llm_resp.parsed:
+            raw_reply = llm_resp.parsed.get("reply", "")
+            next_steps = llm_resp.parsed.get("next_steps", [])
+            citations = llm_resp.parsed.get("citations", [])
+            if llm_resp.model_used == "fallback-template":
+                confidence = 0.5
+        elif llm_resp and llm_resp.content:
+            raw_reply = llm_resp.content
+            confidence = 0.85
+    except Exception as e:
+        logger.error("response_generation_failed", error=str(e))
         raw_reply, next_steps = _fallback_response(sentiment.polarity, is_escalated)
         confidence = 0.5
 

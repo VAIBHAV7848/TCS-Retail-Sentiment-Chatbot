@@ -106,3 +106,59 @@ class GroqProvider:
             latency_ms=round(latency_ms, 2),
             tokens_used=tokens_used,
         )
+
+
+class OllamaProvider:
+    """Provider for calling local Ollama server running on RTX 4050 GPU."""
+
+    def __init__(self, base_url: Optional[str] = None, model: Optional[str] = None):
+        self.base_url = (base_url or settings.ollama_base_url or "http://localhost:11434").rstrip("/")
+        self.model = model or settings.ollama_model or "llama3.2:3b"
+        self.timeout = float(settings.request_timeout_seconds)
+
+    async def generate(self, request: LLMRequest) -> LLMResponse:
+        """Call local Ollama API running on GPU, compute latency, and parse JSON."""
+        messages = []
+        if request.system_prompt:
+            messages.append({"role": "system", "content": request.system_prompt})
+        messages.append({"role": "user", "content": request.user_prompt})
+
+        payload: Dict[str, Any] = {
+            "model": self.model,
+            "messages": messages,
+            "stream": False,
+            "options": {
+                "temperature": request.temperature,
+                "num_predict": request.max_tokens,
+            },
+        }
+
+        if request.response_schema is not None or "json" in request.user_prompt.lower():
+            payload["format"] = "json"
+
+        endpoint = f"{self.base_url}/api/chat"
+        start_time = time.perf_counter()
+        async with httpx.AsyncClient(timeout=self.timeout) as client:
+            resp = await client.post(endpoint, json=payload)
+            resp.raise_for_status()
+            data = resp.json()
+
+        latency_ms = (time.perf_counter() - start_time) * 1000.0
+        content = data.get("message", {}).get("content", "").strip()
+        tokens_used = data.get("eval_count", 0)
+
+        parsed_json: Optional[Dict[str, Any]] = None
+        if request.response_schema is not None or (content.startswith("{") and content.endswith("}")):
+            try:
+                parsed_json = json.loads(content)
+            except Exception as e:
+                logger.warning("ollama_json_parse_failed", error=str(e), content=content[:200])
+
+        return LLMResponse(
+            content=content,
+            parsed=parsed_json,
+            model_used=f"ollama:{self.model}",
+            latency_ms=round(latency_ms, 2),
+            tokens_used=tokens_used,
+        )
+
