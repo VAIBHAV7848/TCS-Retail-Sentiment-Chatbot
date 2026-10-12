@@ -16,7 +16,7 @@ from app.core.config import get_settings
 logger = structlog.get_logger(__name__)
 
 GROQ_ENDPOINT = "https://api.groq.com/openai/v1/chat/completions"
-GROQ_MODEL = "llama-3.3-70b-versatile"
+GROQ_MODEL = "openai/gpt-oss-120b"
 
 
 def should_trigger_tier2(tier1_result: dict, recent_turns: Optional[List[str]] = None) -> bool:
@@ -110,7 +110,7 @@ async def llm_sentiment_review(
         ],
         "response_format": {"type": "json_object"},
         "temperature": 0.1,
-        "max_tokens": 500,
+        "max_tokens": 1500,
     }
 
     headers = {

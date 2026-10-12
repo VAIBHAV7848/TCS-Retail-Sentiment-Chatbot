@@ -26,8 +26,8 @@ settings = get_settings()
 GROQ_ENDPOINT = "https://api.groq.com/openai/v1/chat/completions"
 
 # Model mapping
-MODEL_STRONG = "llama-3.3-70b-versatile"
-MODEL_FAST = "llama-3.1-8b-instant"
+MODEL_STRONG = "openai/gpt-oss-120b"
+MODEL_FAST = "openai/gpt-oss-20b"
 
 
 class GroqProvider:

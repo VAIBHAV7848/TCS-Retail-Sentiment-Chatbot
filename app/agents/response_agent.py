@@ -27,7 +27,7 @@ from app.privacy.output_scan import scan_output
 logger = structlog.get_logger(__name__)
 
 GROQ_ENDPOINT = "https://api.groq.com/openai/v1/chat/completions"
-GROQ_MODEL = "llama-3.3-70b-versatile"
+GROQ_MODEL = "openai/gpt-oss-120b"
 
 
 def _select_tone(sentiment_polarity: Polarity, emotion: str, urgency: Urgency) -> str:
@@ -134,7 +134,7 @@ async def generate_response(input: ResponseInput) -> ResponseOutput:
             ],
             "response_format": {"type": "json_object"},
             "temperature": 0.3,
-            "max_tokens": 600,
+            "max_tokens": 1500,
         }
         headers = {
             "Authorization": f"Bearer {api_key}",

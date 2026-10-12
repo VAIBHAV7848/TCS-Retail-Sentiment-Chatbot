@@ -46,7 +46,7 @@ class Settings(BaseSettings):
     max_retries: int = 2
     request_timeout_seconds: int = 30
 
-    model_config = {"env_file": ".env", "env_file_encoding": "utf-8"}
+    model_config = {"env_file": ".env", "env_file_encoding": "utf-8", "extra": "ignore"}
 
 
 @lru_cache
