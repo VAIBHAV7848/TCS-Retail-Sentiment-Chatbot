@@ -157,11 +157,11 @@ Policy markdown in `data/policies/` is chunked by heading, indexed in SQLite **F
 
 ### 🎭 Avatar
 
-<img align="right" width="300" src="docs/assets/avatar-engine.png" alt="SentimentIQ AI Avatar Engine panel: portrait avatar with tone profile, emotion signal and RoBERTa polarity bar" />
+<img align="right" width="220" src="docs/assets/avatar-face.png" alt="SentimentIQ's emotion-reactive portrait avatar, shown in its thinking state" />
 
-The backend returns an `AvatarDirective` (expression, intensity, voice tone, speech rate, gesture). The frontend renders it with `react-ai-avatar` in three styles — **Portrait**, **Adaptive Vector** and **Memoji** — and speaks replies with the browser's speech synthesis.
+Beside the chat window sits the customer-facing **emotion avatar**. It reacts to every turn: the backend returns an `AvatarDirective` (expression, intensity, voice tone, speech rate, gesture) and the frontend renders it with `react-ai-avatar` in three styles — **Portrait** (shown here, in its "reasoning" state while the pipeline works), **Adaptive Vector** and **Memoji**. Replies are spoken with the browser's speech synthesis.
 
-Beside the face, the panel shows the live **tone profile**, **emotion signal** and RoBERTa **polarity bar** for the current turn, plus an **affect guard**: the avatar never looks cheerful at an angry or escalated customer. Unit tests lock that rule in.
+An **affect guard** keeps it appropriate: the avatar never looks cheerful at an angry or escalated customer, and unit tests lock that rule in.
 
 <br clear="right"/>
 
