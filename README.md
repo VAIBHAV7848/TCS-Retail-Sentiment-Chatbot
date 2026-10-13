@@ -1,7 +1,5 @@
 <div align="center">
 
-<img src="docs/assets/avatar-hero.png" width="190" alt="SentimentIQ's emotion-reactive avatar, shown in its reasoning state" />
-
 # SentimentIQ
 
 **Retail conversations. Actionable intelligence.**<br/>
@@ -17,7 +15,7 @@ hides who they are, and knows when a human should step in.
 [![Hugging Face](https://img.shields.io/badge/Transformers-FFD21E?logo=huggingface&logoColor=black)](https://huggingface.co/)
 [![Ollama](https://img.shields.io/badge/Local_LLM-Ollama-000000?logo=ollama&logoColor=white)](https://ollama.com/)
 [![Presidio](https://img.shields.io/badge/PII-Microsoft_Presidio-0078D4?logo=microsoft&logoColor=white)](https://microsoft.github.io/presidio/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/license/mit)
 
 [Launch film](docs/assets/brag.mp4) · [Quick start](#-quick-start) · [Architecture](#-architecture) · [Try it](#-try-these-7-scenarios) · [API](#-api) · [Roadmap](#-honest-limitations--roadmap)
 
@@ -68,7 +66,7 @@ SentimentIQ is a working prototype that tackles all three in one pipeline.
 
 <table>
 <tr>
-<td width="50%"><a href="docs/assets/screen-chat-escalation.png"><img src="docs/assets/screen-chat-escalation.png" alt="Customer console with avatar and privacy vault"/></a><br/><sub><b>Customer console</b> — chat, adaptive avatar, and the live "raw vs tokenized" privacy panel.</sub></td>
+<td width="50%"><a href="docs/assets/screen-chat-escalation.png"><img src="docs/assets/screen-chat-escalation.png" alt="Customer console with avatar and privacy vault"/></a><br/><sub><b>Customer console</b> — chat on the left; the emotion avatar, tone profile and live "raw vs tokenized" privacy panel on the right.</sub></td>
 <td width="50%"><a href="docs/assets/screen-privacy-vault.png"><img src="docs/assets/screen-privacy-vault.png" alt="Privacy vault"/></a><br/><sub><b>Privacy vault</b> — what the customer typed vs what the model is allowed to see.</sub></td>
 </tr>
 <tr>
@@ -154,7 +152,7 @@ Policy markdown in `data/policies/` is chunked by heading, indexed in SQLite **F
 
 ### 🎭 Avatar
 
-The face at the top of this page is the customer-facing **emotion avatar** that sits beside the chat window. The backend returns an `AvatarDirective` (expression, intensity, voice tone, speech rate, gesture) for every turn, and the frontend renders it with [`react-ai-avatar`](https://github.com/aralde/react-ai-avatar) in three styles — **Portrait**, **Adaptive Vector** and **Memoji**. Replies are spoken with the browser's speech synthesis.
+Beside the chat window sits the customer-facing **emotion avatar** (top right of the first screenshot above, and in the launch film). The backend returns an `AvatarDirective` (expression, intensity, voice tone, speech rate, gesture) for every turn, and the frontend renders it with [`react-ai-avatar`](https://github.com/aralde/react-ai-avatar) in three styles — **Portrait**, **Adaptive Vector** and **Memoji**. Replies are spoken with the browser's speech synthesis.
 
 An **affect guard** keeps it appropriate: the avatar never looks cheerful at an angry or escalated customer, and unit tests lock that rule in.
 
@@ -304,7 +302,7 @@ Avatar rendering uses [`react-ai-avatar`](https://github.com/aralde/react-ai-ava
 
 ## 📄 License
 
-Released under the [MIT License](LICENSE).
+Released under the [MIT License](https://opensource.org/license/mit).
 
 <div align="center">
 <sub>If this project helped or inspired you, a ⭐ goes a long way.</sub>
