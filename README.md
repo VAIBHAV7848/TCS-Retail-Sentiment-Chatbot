@@ -1,11 +1,14 @@
 <div align="center">
 
-# ⚡ SentimentIQ
+<img src="docs/assets/avatar-hero.png" width="190" alt="SentimentIQ's emotion-reactive avatar, shown in its reasoning state" />
 
-### Privacy-first customer-sentiment intelligence for retail support
+# SentimentIQ
 
-**🏆 Winner — TCS Technology Day Hackathon**
-*M.S. Sheshgiri College of Engineering & Technology, Belagavi · October 2026*
+**Retail conversations. Actionable intelligence.**<br/>
+A privacy-first support pipeline that reads how a customer feels,<br/>
+hides who they are, and knows when a human should step in.
+
+**🏆 Winner — TCS Technology Day Hackathon** · *M.S. Sheshgiri College of Engineering & Technology, Belagavi · October 2026*
 
 [![Python](https://img.shields.io/badge/Python-3.11+-3776AB?logo=python&logoColor=white)](https://www.python.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
@@ -16,9 +19,9 @@
 [![Presidio](https://img.shields.io/badge/PII-Microsoft_Presidio-0078D4?logo=microsoft&logoColor=white)](https://microsoft.github.io/presidio/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-**Retail conversations. Actionable intelligence.**<br/>Reads how a customer feels, hides who they are, and knows when a human should step in.
+[Launch film](docs/assets/brag.mp4) · [Quick start](#-quick-start) · [Architecture](#-architecture) · [Try it](#-try-these-7-scenarios) · [API](#-api) · [Roadmap](#-honest-limitations--roadmap)
 
-<br/>
+---
 
 <!--
   UPGRADE TIP (inline video player on GitHub):
@@ -35,12 +38,6 @@
 <sub>▶ <b><a href="docs/assets/brag.mp4">Watch the full 42-second launch film (1080p, with audio)</a></b></sub>
 
 </div>
-
----
-
-## Table of contents
-
-[The problem](#-the-problem) · [What it does](#-what-it-does) · [Screens](#-screens) · [Architecture](#-architecture) · [Under the hood](#-under-the-hood) · [Results](#-results-from-the-demo-session) · [Quick start](#-quick-start) · [Try it](#-try-these-7-scenarios) · [API](#-api) · [Tests](#-tests) · [Honest limitations](#-honest-limitations--roadmap) · [Structure](#-repository-structure)
 
 ---
 
@@ -157,13 +154,9 @@ Policy markdown in `data/policies/` is chunked by heading, indexed in SQLite **F
 
 ### 🎭 Avatar
 
-<img align="right" width="220" src="docs/assets/avatar-face.png" alt="SentimentIQ's emotion-reactive portrait avatar, shown in its thinking state" />
-
-Beside the chat window sits the customer-facing **emotion avatar**. It reacts to every turn: the backend returns an `AvatarDirective` (expression, intensity, voice tone, speech rate, gesture) and the frontend renders it with `react-ai-avatar` in three styles — **Portrait** (shown here, in its "reasoning" state while the pipeline works), **Adaptive Vector** and **Memoji**. Replies are spoken with the browser's speech synthesis.
+The face at the top of this page is the customer-facing **emotion avatar** that sits beside the chat window. The backend returns an `AvatarDirective` (expression, intensity, voice tone, speech rate, gesture) for every turn, and the frontend renders it with [`react-ai-avatar`](https://github.com/aralde/react-ai-avatar) in three styles — **Portrait**, **Adaptive Vector** and **Memoji**. Replies are spoken with the browser's speech synthesis.
 
 An **affect guard** keeps it appropriate: the avatar never looks cheerful at an angry or escalated customer, and unit tests lock that rule in.
-
-<br clear="right"/>
 
 ## 📊 Results from the demo session
 
@@ -306,6 +299,8 @@ This is a hackathon-built prototype. Here is what it is not yet — and what is 
 Designed and built at **M.S. Sheshgiri College of Engineering & Technology, Belagavi**, and recognised as the winning project of the TCS Technology Day hackathon.
 
 Maintained by **[@VAIBHAV7848](https://github.com/VAIBHAV7848)**.
+
+Avatar rendering uses [`react-ai-avatar`](https://github.com/aralde/react-ai-avatar) by Ariel Alejandro (MIT).
 
 ## 📄 License
 
