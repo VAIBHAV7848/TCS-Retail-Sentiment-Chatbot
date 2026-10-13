@@ -1,6 +1,6 @@
 <div align="center">
 
-# ⚡ RetailSense AI
+# ⚡ SentimentIQ
 
 ### Privacy-first customer-sentiment intelligence for retail support
 
@@ -16,7 +16,7 @@
 [![Presidio](https://img.shields.io/badge/PII-Microsoft_Presidio-0078D4?logo=microsoft&logoColor=white)](https://microsoft.github.io/presidio/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-**Reads how a customer feels. Hides who they are. Knows when a human should step in.**
+**Retail conversations. Actionable intelligence.**<br/>Reads how a customer feels, hides who they are, and knows when a human should step in.
 
 <br/>
 
@@ -29,7 +29,7 @@
 -->
 
 <a href="docs/assets/brag.mp4">
-  <img src="docs/assets/demo.gif" alt="RetailSense AI demo — click to watch the full 42-second launch film" width="92%" />
+  <img src="docs/assets/demo.gif" alt="SentimentIQ demo — click to watch the full 42-second launch film" width="92%" />
 </a>
 
 <sub>▶ <b><a href="docs/assets/brag.mp4">Watch the full 42-second launch film (1080p, with audio)</a></b></sub>
@@ -52,7 +52,7 @@ A retail support desk handles thousands of messages. Three things go wrong at sc
 2. **Customers paste sensitive data into chat** — Aadhaar, phone numbers, cards — and it flows straight into whatever model sits behind the bot.
 3. **Bots keep talking when a human is needed**, which turns a bad moment into a lost customer.
 
-RetailSense AI is a working prototype that tackles all three in one pipeline.
+SentimentIQ is a working prototype that tackles all three in one pipeline.
 
 ## ✨ What it does
 
@@ -157,7 +157,13 @@ Policy markdown in `data/policies/` is chunked by heading, indexed in SQLite **F
 
 ### 🎭 Avatar
 
-The backend returns an `AvatarDirective` (expression, intensity, voice tone, speech rate, gesture). The frontend renders it with `react-ai-avatar` in three styles — **Portrait**, **Adaptive Vector**, **Memoji** — and speaks replies with the browser's speech synthesis. Unit tests lock in the "never cheerful when angry or escalated" rule.
+<img align="right" width="300" src="docs/assets/avatar-engine.png" alt="SentimentIQ AI Avatar Engine panel: portrait avatar with tone profile, emotion signal and RoBERTa polarity bar" />
+
+The backend returns an `AvatarDirective` (expression, intensity, voice tone, speech rate, gesture). The frontend renders it with `react-ai-avatar` in three styles — **Portrait**, **Adaptive Vector** and **Memoji** — and speaks replies with the browser's speech synthesis.
+
+Beside the face, the panel shows the live **tone profile**, **emotion signal** and RoBERTa **polarity bar** for the current turn, plus an **affect guard**: the avatar never looks cheerful at an angry or escalated customer. Unit tests lock that rule in.
+
+<br clear="right"/>
 
 ## 📊 Results from the demo session
 
