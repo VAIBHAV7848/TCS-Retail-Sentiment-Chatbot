@@ -307,3 +307,8 @@ Released under the [MIT License](https://opensource.org/license/mit).
 <div align="center">
 <sub>If this project helped or inspired you, a ⭐ goes a long way.</sub>
 </div>
+
+
+## Contributor
+
+Contributed to the SentimentIQ project as part of the TCS Technology Day Hackathon.
